@@ -40,7 +40,7 @@
                 .image-holder {
                     width: clamp(200px, 80vw, 600px);
                     height: fit-content;
-                    max-height: 80vh;
+                    max-height: calc(90vh - 130px);
                     overflow-y: auto;
                     overflow-x: hidden;
 
@@ -116,10 +116,18 @@
                         background-color: var(--primary-text-color);
                         color: var(--primary-text-color-inverted);
                     }
+
+                    &:disabled {
+                        cursor: not-allowed;
+                        opacity: 0.5;
+                    }
                 }
             }
 
             @media screen and (max-width: 500px) {
+                .image-container .image-holder {
+                    max-height: calc(90vh - 185px);
+                }
                 .profile-pic-editor__content__btns {
                     flex-direction: column;
                     height: 95px;

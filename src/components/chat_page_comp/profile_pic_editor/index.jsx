@@ -17,7 +17,9 @@ export default function ProfilePicEditor({ image_file, closeProfilePicEditor, im
     const [circleSize, setCircleSize] = useState(50)
     const [{ windowWidth, windowHeight }, setWindowDimensions] = useState({ windowWidth: null, windowHeight: null })
 
-    const [loading, setLoading] = useState(true)
+    const [loading, setLoading] = useState(false)
+    // to disable upload btn if criteria is not met
+    const [disabled, setDisabled] = useState(false)
 
     const [debugData, setDebugData] = useState({})
 
@@ -85,8 +87,10 @@ export default function ProfilePicEditor({ image_file, closeProfilePicEditor, im
         const containerHeight = draggable_circle_container_ref.current?.offsetHeight
 
         if (!containerWidth || !containerHeight) {
-            return null
+            setDisabled(true)
+            return
         }
+        if (disabled) setDisabled(false)
         
         const circleDiameter = (Math.min(containerWidth, containerHeight) / 100) * circleSize
         
@@ -225,14 +229,14 @@ export default function ProfilePicEditor({ image_file, closeProfilePicEditor, im
                 </div>
                 <input type="range" min="20" max="100" defaultValue={50} onChange={(e) => setCircleSize(e.target.value)} />
                 <div className="profile-pic-editor__content__btns">
-                    {/* {!loading ?
+                    {!loading ?
                         <>
                             <button onClick={closeProfilePicEditor}>Cancel</button>
-                            <button onClick={getCords}>Upload</button>
+                            <button disabled={disabled} onClick={getCords}>Upload</button>
                         </>
-                            : */}
+                            :
                         <BouncingDots />
-                    {/* } */}
+                    }
                 </div>
             </div>
         </div>
