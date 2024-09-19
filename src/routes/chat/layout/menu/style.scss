@@ -1,0 +1,212 @@
+@import '../../../../style/variables.scss';
+
+.Chat {
+    .menu {
+        width: $side-menu-size;
+        flex-shrink: 0;
+        background-color: var(--menu-bg-color);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 50px 0;
+
+        .tab {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 7px;
+            cursor: pointer;
+
+            &.selected {
+                background-color: var(--selected-menu-tab-color);
+
+                svg {
+                    fill: var(--selected-menu-tab-icon-color);
+                }
+            }
+
+            svg {
+                width: $side-menu-size - 17px;
+                height: $side-menu-size - 17px;
+                padding: 15px;
+                fill: var(--menu-tab-icon-color);
+            }
+        }
+
+        .tooltip {
+            position: relative;
+        }
+        .tooltip .tooltiptext {
+            width: fit-content;
+            background-color: black;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 8px 8px;
+            font-size: 14px;
+            letter-spacing: 0.1px;
+            font-family: Inter, sans-serif;
+            font-weight: 500;
+            position: absolute;
+            z-index: 1;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: 0.3s opacity;
+        }
+        .tooltip .tooltiptext::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -7px;
+            border-width: 7px;
+            border-style: solid;
+            border-color: black transparent transparent transparent;
+        }
+        .tooltip:hover .tooltiptext {
+            opacity: 1;
+        }
+
+        #main-icon {
+            img {
+                width: $side-menu-size - 35px;
+            }
+        }
+
+        .nested-tab-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .center-tabs {
+            height: 20dvh;
+        }
+
+        .bottom-tabs {
+            height: 15dvh;
+
+            .profile {
+                position: relative;
+                height: $side-menu-size - 40px;
+                width: $side-menu-size - 40px;
+                border-radius: 50%;
+
+                img {
+                    height: 100%;
+                    width: 100%;
+                    border-radius: 50%;
+                }
+
+                .no-img-profile-icon {
+                    height: 100%;
+                    width: 100%;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    background-color: red;
+                    color: white;
+                }
+
+                .profile-popup {
+                    background-color: var(--menu-profile-popup-bg-color);
+                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.342);
+                    border-radius: 20px;
+                    padding: 5px;
+                    width: 200px;
+
+                    .profile-icon {
+                        height: 80px;
+                        width: 80px;
+                        border-radius: 50%;
+                        background-color: gray;
+                        margin: 20px auto;
+                        outline-color: invert(100%);
+                        outline-width: 3px;
+                        outline-style: solid;
+                        outline-offset: 4px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+
+                        h2 {
+                            color: white;
+                            font-size: 60px;
+                            font-weight: 500;
+                        }
+
+                        img {
+                            height: 100%;
+                            width: 100%;
+                            border-radius: 50%;
+                        }
+                    }
+                    .profile-info {
+                        text-align: center;
+                        margin-bottom: 20px;
+
+                        & > * {
+                            margin: 10px 0;
+                        }
+
+                        h3 {
+                            font-size: 15px;
+                            font-weight: 600;
+                        }
+                        p {
+                            font-size: 14px;
+                            font-weight: 400;
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+
+    @media screen and (max-width: 1000px) {
+        .menu {
+            width: 100%;
+            height: $bottom-menu-size;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            padding: 0 20px;
+
+            .tab {
+                svg {
+                    width: $bottom-menu-size - 15px;
+                    height: $bottom-menu-size - 15px;
+                    padding: 12px;
+                }
+            }
+            .tooltip .tooltiptext {
+                display: none;
+            }
+
+            #main-icon {
+                display: none;
+            }
+
+            .nested-tab-container {
+                flex-direction: row;
+                height: fit-content;
+            }
+
+            .center-tabs {
+                flex: 1;
+                max-width: 500px;
+            }
+
+            .bottom-tabs {
+                display: none;
+            }
+
+        }
+    }
+}

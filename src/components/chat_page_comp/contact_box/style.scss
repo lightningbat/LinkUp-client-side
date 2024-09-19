@@ -1,0 +1,118 @@
+$contact-image-size: 40px;
+
+.Chat {
+    .contact {
+        display: flex;
+        gap: 0.5em;
+        align-items: center;
+        padding: 10px 15px;
+        cursor: pointer;
+        transition: 0.2s ease-in-out;
+        border-bottom: 1px solid var(--contact-box-border-color);
+
+        &:hover {
+            background-color: var(--contact_box-hover-bg-color);
+            border-bottom-color: var(--contact_box-hover-bg-color);
+        }
+
+        .contact-image {
+            position: relative;
+            width: $contact-image-size;
+            height: $contact-image-size;
+            border-radius: 50%;
+            margin-right: 0.5em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                border-radius: 50%;
+            }
+
+            h2 {
+                color: white;
+                font-size: calc($contact-image-size / 1.5);
+                font-weight: 500;
+            }
+
+            .status {
+                position: absolute;
+                bottom: $contact-image-size * 0.05;
+                right: $contact-image-size * 0.05;
+                width: 10px;
+                height: 10px;
+                border-radius: 50%;
+                background-color: transparent;
+                border: 1px solid var(--contact_box-status-border-color);
+
+                &.online {
+                    background-color: #00ff00;
+                }
+            }
+        }
+
+        .contact-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: start;
+            gap: 0.5em;
+            position: relative;
+
+            .contact-name {
+                font-size: 1.4em;
+                font-weight: 600;
+            }
+
+            .last-message {
+                font-size: 1.3em;
+                font-weight: 400;
+
+                overflow: hidden;
+                display: -webkit-box;
+                -webkit-line-clamp: 1; /* number of lines to show */
+                line-clamp: 2;
+                -webkit-box-orient: vertical;
+            }
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: end;
+            gap: 0.5em;
+            margin-left: 10px;
+
+            .last-message-time {
+                font-size: 1.2em;
+                font-weight: 500;
+            }
+
+            .unread-count {
+                font-size: 1.1em;
+                font-weight: 500;
+                border-radius: 50%;
+                height: 20px;
+                width: 20px;
+                padding: 0 5px;
+                min-width: fit-content;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+
+                color: #ef476f;
+                background-color: rgba(239, 71, 111, .18);
+            }
+        }
+    }
+
+
+    @media screen and (max-width: 300px) {
+        .contact {
+            padding: 0 5px;
+        }
+    }
+}

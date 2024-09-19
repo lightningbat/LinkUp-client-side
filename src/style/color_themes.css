@@ -1,0 +1,41 @@
+:root {
+    --primary-text-color: #4e4e4e;
+    --primary-text-color-inverted: #ffffff;
+    --placeholder-color: #4e4e4e;
+    --scrollbar-thumb-color: #CBD1D8;
+
+    --menu-bg-color: #ffffff;
+    --menu-tab-icon-color: #303030;
+    --menu-profile-popup-bg-color: #ffffff;
+    --selected-menu-tab-color: #f2f8fa;
+    --selected-menu-tab-icon-color: #001aff;
+    --tab-content-bg-color: #F5F7FB;
+    --contacts-tab-search-box-bg-color: #E6EBF5;
+    --contacts-tab-search-box-icon-color: #4e4e4e;
+    --contact_box-hover-bg-color: #E6EBF5;
+    --contact-box-border-color: #0000001f;
+    --settings-tab-profile-edit-btn-bg-color: #E6EBF5;
+    --settings-tab-options-bg-color: #E6EBF5;
+    --settings-tab-logout-btn-bg-color: #ffbbbb;
+}
+
+body[data-theme="dark-theme"] {
+    --primary-text-color: #e7e7e7;
+    --primary-text-color-inverted: #000000;
+    --placeholder-color: #A6B0CF;
+    --scrollbar-thumb-color: #5d656d;
+
+    --menu-bg-color: #36404A;
+    --menu-tab-icon-color: #A6B0CF;
+    --menu-profile-popup-bg-color: #36404A;
+    --selected-menu-tab-color: #3E4A57;
+    --selected-menu-tab-icon-color: #7269EF;
+    --tab-content-bg-color: #303841;
+    --contacts-tab-search-box-bg-color: #36404A;
+    --contacts-tab-search-box-icon-color: #A6B0CF;
+    --contact_box-hover-bg-color: #36404A;
+    --contact-box-border-color: #ffffff21;
+    --settings-tab-profile-edit-btn-bg-color: #36404A; /* profile image edit btn */
+    --settings-tab-options-bg-color: #36404A;
+    --settings-tab-logout-btn-bg-color: #ff9b9b;
+}

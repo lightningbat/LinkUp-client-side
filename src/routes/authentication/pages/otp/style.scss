@@ -1,0 +1,91 @@
+.authentication .otp {
+    animation-duration: 0.3s;
+    animation-timing-function: ease-out;
+    animation-delay: 0s;
+    animation-iteration-count: 1;
+    
+    .card {
+        max-width: 35em;
+
+        p {
+            letter-spacing: 0.2px;
+        }
+
+        .email-display {
+            margin-top: 0.5em;
+            color: #34a5bd;
+        }
+
+        .error-message {
+            margin-bottom: 0.7em;
+            height: 1.2em;
+        }
+
+        .resend-btn {
+            font-size: 1.5em;
+            margin-top: 0.5em;
+
+            span.text {
+                cursor: pointer;
+                color: #6159CB;
+            }
+        }
+
+        .resend-btn.active span {
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+
+        .btn-container {
+            margin-top: 2em;
+
+            button {
+                border: 0;
+                background-color: #6159CB;
+                color: white;
+                font-size: 1.5em;
+                padding: 0.7em 2em;
+                border-radius: 4px;
+                user-select: none;
+
+                &:hover {
+                    opacity: 0.8;
+                    cursor: pointer;
+                }
+            }
+        }
+
+    }
+
+    .edit-email {
+        margin-top: 3em;
+
+        span {
+            cursor: pointer;
+            color: #6159CB;
+            padding: 0.3em 0.6em 0.3em 0.2em;
+
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+    }
+
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        margin: 0;
+    }
+
+    input[type=number] {
+        -moz-appearance:textfield;
+    }
+
+    input::placeholder {
+        font-size: 1.2em;
+        font-weight: 100;
+    }
+}

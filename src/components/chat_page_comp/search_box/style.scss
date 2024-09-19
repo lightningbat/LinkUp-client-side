@@ -1,0 +1,47 @@
+$search-box-size: 40px;
+
+.Chat {
+    .input-box-container {
+        height: $search-box-size;
+        
+        .input-box {
+            background-color: var(--contacts-tab-search-box-bg-color);
+            display: flex;
+            align-items: center;
+            border-radius: 4px;
+            height: 100%;
+            margin: 0 20px;
+
+            svg {
+                width: $search-box-size - 20px;
+                height: $search-box-size - 20px;
+                padding: 2px;
+                fill: var(--contacts-tab-search-box-icon-color);
+                margin: 0 10px;
+                flex-shrink: 0;
+            }
+
+            input {
+                color: var(--primary-text-color);
+                flex: 1;
+                height: 100%;
+                font-size: 15px;
+                outline: none;
+                border: 0;
+                background-color: transparent;
+                padding-right: 1em;
+                letter-spacing: 0.2px;
+
+                &::placeholder {
+                    color: var(--placeholder-color);
+                }
+            }
+        }
+        @media screen and (max-width: 300px) {
+            .input-box {
+                margin: 0 10px;
+            }
+        }
+    }
+
+}

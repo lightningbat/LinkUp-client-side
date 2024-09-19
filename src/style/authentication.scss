@@ -1,0 +1,83 @@
+.authentication {
+    .container {
+        margin: 5em 0;
+        font-family: "Public Sans", sans-serif;
+        text-align: center;
+        padding: 0 1em;
+        color: #616161;
+    }
+
+    .logo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 3em;
+
+        img {
+            width: 35px;
+        }
+
+        h1 {
+            margin: 0;
+            font-family: K2D, sans-serif;
+            font-weight: 600;
+            font-size: 3em;
+
+            .light {
+                font-weight: 300;
+            }
+        }
+    }
+
+    h4 {
+        font-size: 2.4em;
+        font-weight: 500;
+        margin-bottom: 0.5em;
+    }
+
+    .card {
+        background-color: white;
+        padding: 3em 2em;
+        border-radius: 4px;
+        max-width: 50em;
+        margin: 2em auto 0;
+
+        form {
+            text-align: start;
+        }
+    }
+
+    .link {
+        margin-top: 2em;
+
+        .link-span {
+            color: #6159CB;
+            cursor: pointer;
+            font-size: 1.1em;
+
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+    }
+
+    .error-message {
+        color: rgb(224, 89, 89);
+        font-size: 1.5em;
+        margin-top: 0.5em;
+        letter-spacing: 0.2px;
+    }
+
+    .btn-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 5em;
+
+        & > div {
+            flex: 1;
+        }
+
+    }
+}

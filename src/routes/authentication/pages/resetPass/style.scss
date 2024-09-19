@@ -1,0 +1,29 @@
+.authentication {
+    .resetPass {
+        animation-duration: 0.3s;
+        animation-timing-function: ease-out;
+        animation-delay: 0s;
+        animation-iteration-count: 1;
+
+        .account_info {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 3em;
+        }
+
+        .error-message {
+            margin-bottom: 0.5em;
+        }
+
+        .link {
+            font-size: 2em;
+            text-align: center;
+
+            .link-span {
+                font-size: 0.8em;
+            }
+        }
+    }
+}

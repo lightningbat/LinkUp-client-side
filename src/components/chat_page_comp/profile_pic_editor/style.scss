@@ -1,0 +1,131 @@
+.Chat .settings-tab {
+    .profile-pic-editor {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 1000;
+        background-color: rgba(0, 0, 0, 0.247);
+
+        .profile-pic-editor__content {
+            padding: 20px;
+            background-color: var(--tab-content-bg-color);
+            border-radius: 20px 20px 10px 10px;
+
+
+            .image-container {
+                position: relative;
+                overflow: hidden;
+
+                .draggable-circle {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    transform: translate(-50%, -50%);
+                    border-radius: 50%;
+                    outline-style: solid;
+                    outline-color: rgba(0, 0, 0, 0.267);
+                    outline-width: 100000px;
+                    border: 1px solid rgba(0, 0, 0, 0.63);
+
+                    cursor: move;
+                    user-select: none;
+                    touch-action: none;
+                }
+
+                .image-holder {
+                    width: clamp(200px, 80vw, 600px);
+                    height: fit-content;
+                    max-height: 80vh;
+                    overflow-y: auto;
+                    overflow-x: hidden;
+
+                    img {
+                        width: 100%;
+                        height: auto;
+                        pointer-events: none;
+                        display: block;
+                    }
+
+                    &::-webkit-scrollbar {
+                        width: 0;
+                    }
+                }
+            }
+
+            input[type="range"] {
+                width: 100%;
+                -webkit-appearance: none;
+                appearance: none;
+                height: 10px;
+                background: var(--primary-text-color);
+                border-radius: 5px;
+                margin: 20px 0;
+                outline: none;
+                opacity: 0.7;
+                -webkit-transition: .2s;
+                transition: opacity .2s;
+            }
+
+            input[type="range"]:hover {
+                opacity: 1;
+            }
+
+            input[type="range"]::-webkit-slider-thumb {
+                -webkit-appearance: none;
+                appearance: none;
+                width: 30px;
+                height: 30px;
+                border-radius: 50%;
+                background: var(--primary-text-color);
+                border: 1px solid var(--primary-text-color-inverted);
+                cursor: pointer;
+            }
+
+            input[type="range"]::-moz-range-thumb {
+                width: 30px;
+                height: 30px;
+                border-radius: 50%;
+                background: var(--primary-text-color);
+                border: 1px solid var(--primary-text-color-inverted);
+                cursor: pointer;
+            }
+
+            .profile-pic-editor__content__btns {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 20px;
+                height: 40px;
+
+                button {
+                    width: 90%;
+                    padding: 10px;
+                    border: 1px solid var(--primary-text-color);
+                    border-radius: 5px;
+                    font-size: 1.2em;
+                    background-color: transparent;
+                    color: var(--primary-text-color);
+                    cursor: pointer;
+
+                    &:hover {
+                        background-color: var(--primary-text-color);
+                        color: var(--primary-text-color-inverted);
+                    }
+                }
+            }
+
+            @media screen and (max-width: 500px) {
+                .profile-pic-editor__content__btns {
+                    flex-direction: column;
+                    height: 95px;
+                }
+            }
+        }
+    }
+
+}

@@ -1,0 +1,112 @@
+.Chat .settings-tab {
+    .blocked-list {
+        height: 100%;
+        overflow-y: auto;
+        position: relative;
+
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            font-weight: 500;
+            padding: 10px 0 10px 5%;
+            position: sticky;
+            top: 0;
+            background-color: var(--tab-content-bg-color);
+            z-index: 1;
+
+            svg {
+                fill: var(--primary-text-color);
+                width: 30px;
+                height: 25px;
+                padding: 3px;
+                cursor: pointer;
+            }
+
+            p {
+                font-size: 17px;
+            }
+        }
+
+        .body {
+            margin-top: 30px;
+            display: flex;
+            flex-direction: column;
+            padding: 0 5%;
+        }
+
+        .confirm-popup {
+            background-color: var(--tab-content-bg-color);
+            box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.39);
+            border-radius: 5px;
+            padding: 15px;
+            width: 300px;
+
+            label {
+                font-size: 17px;
+                font-weight: 500;
+                color: var(--primary-text-color);
+                margin-bottom: 10px;
+            }
+
+            .profile-01 {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                margin-top: 20px;
+
+                .profile-icon {
+                    width: 50px;
+                    height: 50px;
+                    border-radius: 50%;
+                    overflow: hidden;
+                    background-color: rgb(44, 112, 139);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+
+                    img {
+                        width: 100%;
+                        height: 100%;
+                    }
+
+                    h3 {
+                        color: white;
+                        font-size: 25px;
+                        font-weight: 500;
+                    }
+                }
+
+                .profile-info {
+                    h3 {
+                        font-size: 17px;
+                    }
+                    p {
+                        font-size: 15px;
+                    }
+                }
+            }
+
+            .buttons {
+                display: flex;
+                justify-content: flex-end;
+                gap: 10px;
+                margin-top: 20px;
+
+                button {
+                    padding: 5px 10px;
+                    border-radius: 5px;
+                    font-size: 15px;
+                    background-color: transparent;
+                    border: 1px solid var(--contact-box-border-color);
+                    color: var(--primary-text-color);
+                    cursor: pointer;
+
+                    &:hover {
+                        background-color: var(--contact_box-hover-bg-color);
+                    }
+                }
+            }
+        }
+    }
+}

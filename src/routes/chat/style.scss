@@ -1,0 +1,125 @@
+@import "../../style/color_themes";
+@import '../../style/variables.scss';
+
+.test-button {
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 9999;
+}
+
+
+.Chat.layout-wrapper {
+    display: flex;
+    height: 100dvh;
+
+    /* global styles starts here */
+
+    .no-select {
+        -webkit-touch-callout: none;
+        /* iOS Safari */
+        -webkit-user-select: none;
+        /* Safari */
+        -khtml-user-select: none;
+        /* Konqueror HTML */
+        -moz-user-select: none;
+        /* Old versions of Firefox */
+        -ms-user-select: none;
+        /* Internet Explorer/Edge */
+        user-select: none;
+        /* Non-prefixed version, currently
+        supported by Chrome, Edge, Opera and Firefox */
+    }
+
+    .cursor-pointer {
+        cursor: pointer;
+    }
+
+    ::-webkit-scrollbar {
+        width: 8px;
+    }
+    .more-width::-webkit-scrollbar {
+        width: 15px;
+    }
+    ::-webkit-scrollbar-thumb {
+        background: var(--scrollbar-thumb-color);
+        border-radius: 10px;
+    }
+
+    @-moz-document url-prefix() {
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: var(--scrollbar-thumb-color) transparent;
+        }
+    }
+
+
+    /* global styles ends here */
+
+
+    .tab-content {
+        width: 400px;
+        background-color: var(--tab-content-bg-color);
+    }
+
+    .chat-content {
+        flex: 1;
+        background-color: rgb(random(255), random(255), random(255));
+    }
+
+    @media screen and (max-width: 1000px) {
+        & {
+            flex-direction: column-reverse;
+        }
+
+        .tab-content {
+            width: 100%;
+            height: calc(100% - $bottom-menu-size);
+        }
+
+        .chat-content {
+            display: none;
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+        }
+
+        .chat-content.show {
+            display: block;
+            animation: open-chat $chat-content_anime-duration ease-in-out;
+        }
+
+        @keyframes open-chat {
+            0% {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .chat-content.hide {
+            display: block;
+            animation: close-chat $chat-content_anime-duration ease-in-out forwards;
+        }
+
+        @keyframes close-chat {
+            0% {
+                opacity: 1;
+                transform: translateX(0);
+            }
+
+            100% {
+                opacity: 0;
+                transform: translateX(100%);
+                display: none;
+            }
+        }
+
+    }
+}
