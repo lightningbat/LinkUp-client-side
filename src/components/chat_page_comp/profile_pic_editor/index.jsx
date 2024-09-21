@@ -5,6 +5,8 @@ import { Jimp } from 'jimp'
 // import LoadingIcons from 'react-loading-icons'
 
 import { BouncingDots } from '../../../custom/loading_animations'
+import useCustomDialog from '../../../custom/dialogs/index'
+import { getToken } from '../../../services/authenticationService'
 
 export default function ProfilePicEditor({ image_file, closeProfilePicEditor, imageDimensions, setEditedProfileFile }) {
     const draggable_circle_container_ref = useRef(null)
@@ -23,7 +25,7 @@ export default function ProfilePicEditor({ image_file, closeProfilePicEditor, im
 
     const [debugData, setDebugData] = useState({})
 
-    // const useCustomDialogs = useCustomDialog()
+    const customDialogBox = useCustomDialog()
 
     const getCords = async () => {
         setLoading(true)
@@ -58,12 +60,38 @@ export default function ProfilePicEditor({ image_file, closeProfilePicEditor, im
         await jimpImage.crop({ x: x_cord, y: y_cord, w: size, h: size })
         await jimpImage.resize({ w: 150, h: 150 })
         const newFile = await jimpImage.getBase64('image/jpeg')
-        setEditedProfileFile(newFile)
 
-        closeProfilePicEditor()
+        uploadImage({ base64_image: newFile })
     }
 
-    const mainCircleWithinContainer = (containerWidth, containerHeight) => {
+    async function uploadImage({ base64_image }) {
+        const base_url = import.meta.env.VITE_SERVER_URL
+        const token = getToken()
+        const response = await fetch(base_url + "/setProfilePic", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                image: base64_image,
+                token
+            }),
+        })
+        if (response.ok) {
+            setEditedProfileFile(base64_image)
+            closeProfilePicEditor()
+        }
+        else {
+            setLoading(false)
+            await customDialogBox({
+                type: 'alert',
+                description: await response.text(),
+            })
+        }
+
+    }
+
+    const keepCircleWithinContainer = (containerWidth, containerHeight) => {
         const circleDiameterOffset = draggable_circle_ref.current?.offsetWidth / 2
         const circleTop = dy - circleDiameterOffset;
         const circleBottom = dy + circleDiameterOffset
@@ -91,13 +119,13 @@ export default function ProfilePicEditor({ image_file, closeProfilePicEditor, im
             return
         }
         if (disabled) setDisabled(false)
-        
+
         const circleDiameter = (Math.min(containerWidth, containerHeight) / 100) * circleSize
-        
+
         draggable_circle_ref.current.style.width = `${circleDiameter}px`
         draggable_circle_ref.current.style.height = `${circleDiameter}px`
 
-        mainCircleWithinContainer(containerWidth, containerHeight)
+        keepCircleWithinContainer(containerWidth, containerHeight)
 
     }, [windowWidth, windowHeight, circleSize])
 
@@ -234,7 +262,7 @@ export default function ProfilePicEditor({ image_file, closeProfilePicEditor, im
                             <button onClick={closeProfilePicEditor}>Cancel</button>
                             <button disabled={disabled} onClick={getCords}>Upload</button>
                         </>
-                            :
+                        :
                         <BouncingDots />
                     }
                 </div>

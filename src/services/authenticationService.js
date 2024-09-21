@@ -26,13 +26,17 @@ export default async function AuthenticationService(url, payload) {
             return { status, data };
         }
 
-        if (!res.ok) {
-            if ('type' in res && 'message' in res) {
-                const { type, message } = await res.json();
-                return { status, type, message };
-            }
-            return { status, type: res.type, message: res.message || res.statusText };
+        if (400 <= status && status < 500) {
+            const { type, message } = await res.json();
+            return { status, type, message };
         }
+        if (500 <= status && status < 600) {
+            const message = await res.text();
+            return { status, type: "server", message };
+        }
+        
+        return { status: 500, type: res.type, message: res.message || res.statusText };
+        
     } catch (err) {
         return { status: 500, type: "server", message: err.message };
     }

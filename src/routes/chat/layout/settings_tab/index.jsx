@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 
 import { EditProfile, EditPassword, BlockedList } from './fragments'
 
-// import useCustomDialog from '../../../../custom/dialogs'
+import useCustomDialog from '../../../../custom/dialogs'
 
 export default function SettingsTab({ darkMode, setDarkMode }) {
     const profile_info = {
@@ -79,7 +79,7 @@ export default function SettingsTab({ darkMode, setDarkMode }) {
 
 
     // Initialize custom dialogs
-    // const customDialogs = useCustomDialog()
+    const customDialogs = useCustomDialog()
 
     async function handleConfirmDeleteDP() {
         closeEditPicDropdown()
@@ -111,18 +111,18 @@ export default function SettingsTab({ darkMode, setDarkMode }) {
             if (!file) return;
 
             if (!confirmFileType(file)) {
-                // await customDialogs({
-                //     type: 'alert',
-                //     description: 'Only PNG and JPG files are allowed.',
-                // })
+                await customDialogs({
+                    type: 'alert',
+                    description: 'Only PNG and JPG files are allowed.',
+                })
                 return;
             }
 
             if (file.size > 5 * 1024 * 1024) {
-                // await customDialogs({
-                //     type: 'alert',
-                //     description: 'File size too large. Max size is 5MB.',
-                // })
+                await customDialogs({
+                    type: 'alert',
+                    description: 'File size too large. Max size is 5MB.',
+                })
                 return;
             }
 
