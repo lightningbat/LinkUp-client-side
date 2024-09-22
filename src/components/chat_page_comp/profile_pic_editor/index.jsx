@@ -7,6 +7,7 @@ import { Jimp } from 'jimp'
 import { BouncingDots } from '../../../custom/loading_animations'
 import useCustomDialog from '../../../custom/dialogs/index'
 import { getToken } from '../../../services/authenticationService'
+import fetchService from '../../../services/fetchService'
 
 export default function ProfilePicEditor({ image_file, closeProfilePicEditor, imageDimensions, setEditedProfileFile }) {
     const draggable_circle_container_ref = useRef(null)
@@ -67,28 +68,36 @@ export default function ProfilePicEditor({ image_file, closeProfilePicEditor, im
     async function uploadImage({ base64_image }) {
         const base_url = import.meta.env.VITE_SERVER_URL
         const token = getToken()
-        const response = await fetch(base_url + "/setProfilePic", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                image: base64_image,
-                token
-            }),
-        })
-        if (response.ok) {
-            setEditedProfileFile(base64_image)
-            closeProfilePicEditor()
+
+        try {
+            const response = await fetchService(base_url + "/setProfilePic", {image: base64_image, token})
+            if (response.ok) {
+                setEditedProfileFile(base64_image)
+                closeProfilePicEditor()
+            }
+            else {
+                setLoading(false)
+                let message = 'Something went wrong'
+                if (response.responseType == 'json') {
+                    message = response.responseData.message
+                }
+                else if (response.responseType == 'text') {
+                    message = response.responseData
+                }
+                await customDialogBox({
+                    type: 'alert',
+                    description: message,
+                })
+            }
         }
-        else {
+        catch (error) {
             setLoading(false)
+            console.log("Error in uploadImage: ", error)
             await customDialogBox({
                 type: 'alert',
-                description: await response.text(),
+                description: "Something went wrong!",
             })
         }
-
     }
 
     const keepCircleWithinContainer = (containerWidth, containerHeight) => {

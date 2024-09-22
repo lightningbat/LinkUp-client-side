@@ -6,14 +6,19 @@ import { EditProfile, EditPassword, BlockedList } from './fragments'
 
 import useCustomDialog from '../../../../custom/dialogs'
 
+import { getToken } from '../../../../services/authenticationService'
+import fetchService from '../../../../services/fetchService'
+
 export default function SettingsTab({ darkMode, setDarkMode }) {
     const profile_info = {
-        profile_img: null, //"https://picsum.photos/150/150",
+        profile_img: "https://picsum.photos/150/150",
         bg_color: "rgb(1, 135, 197)",
         display_name: 'User Name',
         username: 'User Username #5464',
         email: 'User Email',
     }
+
+    const [profileInfo, setProfileInfo] = useState(profile_info)
 
     const element = useRef(null)
 
@@ -64,7 +69,7 @@ export default function SettingsTab({ darkMode, setDarkMode }) {
         setTimeout(() => { if (!showFragment) setSelectedFragment(null) }, 200);
     }, [showFragment])
 
-    // wider scrollbar when mouse is over it
+    // widen scrollbar when mouse is over it
     useEffect(() => {
         element.current.addEventListener("mousemove", function (e) {
             const distanceX = element.current.offsetLeft + element.current.offsetWidth - e.pageX;
@@ -78,7 +83,7 @@ export default function SettingsTab({ darkMode, setDarkMode }) {
     }, [])
 
 
-    // Initialize custom dialogs
+    // Initializing custom dialogs
     const customDialogs = useCustomDialog()
 
     async function handleConfirmDeleteDP() {
@@ -89,10 +94,37 @@ export default function SettingsTab({ darkMode, setDarkMode }) {
             title: 'Confirm?',
             description: 'Delete profile picture.',
         })
+
+        if (confirm) {
+            try {
+                const token = getToken()
+                const response = await fetchService( import.meta.env.VITE_SERVER_URL + '/deleteProfilePic', {token} )
+                if (response.ok) {
+                    setProfileInfo({ ...profileInfo, profile_img: null })
+                }
+                else {
+                    let message = 'Something went wrong'
+                    if (response.responseType == 'json') {
+                        message = response.responseData.message
+                    }
+                    else if (response.responseType == 'text') {
+                        message = response.responseData
+                    }
+                    await customDialogs({
+                        type: 'alert',
+                        description: message,
+                    })
+                }
+            }
+            catch (error) {
+                console.log(error)
+                await customDialogs({
+                    type: 'alert',
+                    description: "Something went wrong!",
+                })
+            }
+        }
     }
-
-
-    const selected_img_ref = useRef(null)
 
     const confirmFileType = (file) => {
         const fileType = file.type
@@ -144,7 +176,6 @@ export default function SettingsTab({ darkMode, setDarkMode }) {
                     return
                 }
                 
-                selected_img_ref.current.src = fileReader.result;
                 setProfilePicEditor({ display: true, image_file: fileReader.result, imageDimensions })
             }
             fileReader.onerror = async (error) => {
@@ -174,7 +205,7 @@ export default function SettingsTab({ darkMode, setDarkMode }) {
                 if (aspect_ratio >= maxAspectRatio || aspect_ratio <= minAspectRatio) {
                     return reject(`Image aspect ratio should be between ${maxAspectRatio} and ${minAspectRatio} \n\nGot: ${Math.round((aspect_ratio + Number.EPSILON) * 10) / 10}`)
                 }
-                resolve({'width': img.width, 'height': img.height})
+                resolve({ 'width': img.width, 'height': img.height })
             }
             img.onerror = (error) => {
                 console.log(error)
@@ -187,11 +218,11 @@ export default function SettingsTab({ darkMode, setDarkMode }) {
         <div className="settings-tab" ref={element}>
             {!showFragment && <>
                 <div className='profile no-select'>
-                    <div className="profile-icon" style={{ backgroundColor: profile_info.bg_color }}>
-                        {profile_info.profile_img ?
-                            <img src={editedProfileFile ? editedProfileFile : profile_info.profile_img} alt="" />
+                    <div className="profile-icon" style={{ backgroundColor: profileInfo.bg_color }}>
+                        {profileInfo.profile_img ?
+                            <img src={editedProfileFile ? editedProfileFile : profileInfo.profile_img} alt="" />
                             :
-                            <h2>{profile_info.display_name[0]}</h2>
+                            <h2>{profileInfo.display_name[0]}</h2>
                         }
                         <div className="edit-btn">
                             <svg xmlns="http://www.w3.org/2000/svg" onClick={toggleEditPicDropdown} ref={edit_pic_btn_ref} width="16" height="16" fill="currentColor" className="bi bi-pencil-fill" viewBox="0 0 16 16">
@@ -202,7 +233,7 @@ export default function SettingsTab({ darkMode, setDarkMode }) {
                                     <div className="edit-btn-dropdown">
                                         <ul>
                                             <li onClick={selectDPimage}>Upload photo</li>
-                                            {profile_info.profile_img && <li onClick={handleConfirmDeleteDP}>Remove photo</li>}
+                                            {/*profileInfo.profile_img*/ true && <li onClick={handleConfirmDeleteDP}>Remove photo</li>}
                                         </ul>
                                     </div>
                                 </OutsideClickDetector>}
@@ -210,7 +241,7 @@ export default function SettingsTab({ darkMode, setDarkMode }) {
                         </div>
                     </div>
 
-                    <h2 className="profile-name">{profile_info.display_name}</h2>
+                    <h2 className="profile-name">{profileInfo.display_name}</h2>
                 </div>
 
                 <div className="setting-options no-select">
