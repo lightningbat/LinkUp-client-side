@@ -2,7 +2,7 @@ import './style.scss';
 
 import { Menu, ContactsTab, GroupsTab, SettingsTab } from './layout'
 
-import React, { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 // import io from "socket.io-client";
 
 export default function Chat() {

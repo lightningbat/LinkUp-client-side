@@ -1,20 +1,5 @@
 @import '../../../../style/variables.scss';
 
-.selected-image-display {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100px;
-    height: 100px;
-    display: none;
-
-    // img {
-    //     clip-path: circle(100px at 100px 100px);
-    //     height: auto;
-    //     // max-width: 50vw;
-    // }
-}
-
 .Chat {
     .settings-tab {
         height: 100%;

@@ -8,7 +8,7 @@ import useCustomDialog from '../../../../custom/dialogs'
 
 export default function SettingsTab({ darkMode, setDarkMode }) {
     const profile_info = {
-        profile_img: "https://picsum.photos/150/150",
+        profile_img: null, //"https://picsum.photos/150/150",
         bg_color: "rgb(1, 135, 197)",
         display_name: 'User Name',
         username: 'User Username #5464',
@@ -185,9 +185,6 @@ export default function SettingsTab({ darkMode, setDarkMode }) {
 
     return (
         <div className="settings-tab" ref={element}>
-            <div className="selected-image-display">
-                <img src="https://picsum.photos/150/150" alt="" ref={selected_img_ref} />
-            </div>
             {!showFragment && <>
                 <div className='profile no-select'>
                     <div className="profile-icon" style={{ backgroundColor: profile_info.bg_color }}>
