@@ -38,7 +38,7 @@ export default function SignUp({ changePage, defaultValue, setUserInput, pageTra
     const [fetchError, setError] = useState({type: null, message: null})
 
     // references for form inputs
-    const _user_name = useRef(null)
+    const _display_name = useRef(null)
     const _email = useRef(null)
     const _password = useRef(null)
 
@@ -51,9 +51,17 @@ export default function SignUp({ changePage, defaultValue, setUserInput, pageTra
     const handleSubmit = async (event) => {
         event.preventDefault()
         setSubmitting(true);
+        setErrorStatus(null, null)
+
+        if ((_display_name.current.value).trim() == 0) {
+            // if display name is empty or whitespaces
+            setSubmitting(false)
+            setErrorStatus("display_name", "Please enter a username")
+            return
+        }
 
         const data = {
-            "username": _user_name.current.value,
+            "display_name": _display_name.current.value,
             "email": _email.current.value,
             "password": _password.current.value
         }
@@ -82,7 +90,7 @@ export default function SignUp({ changePage, defaultValue, setUserInput, pageTra
                 <div className="card">
                     <form action='' onSubmit={(e) => handleSubmit(e)}>
                         <fieldset disabled={submitting}>
-                            <UserNameInputBox ref={_user_name} error={(fetchError.type) === "username" && true} default_value={defaultValue.username} />
+                            <UserNameInputBox ref={_display_name} error={(fetchError.type) === "display_name" && true} default_value={defaultValue.display_name} />
                             <EmailInputBox ref={_email} error={(fetchError.type) === "email" && true} default_value={defaultValue.email} />
                             <PasswordInputBox ref={_password} error={(fetchError.type) === "password" && true} default_value={defaultValue.password} />
                             <div className="error-message">{fetchError.message}</div>
