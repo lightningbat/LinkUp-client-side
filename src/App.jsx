@@ -12,12 +12,25 @@ export default function App() {
   const [currentUser, setCurrentUser] = useState(null)
   const [darkMode, setDarkMode] = useState(false)
 
-  // set theme
+  // sets dark mode from local storage
+  useEffect(() => {
+    const dark_mode = localStorage.getItem('darkMode')
+    if (dark_mode == null) {
+      localStorage.setItem('darkMode', 'false')
+    }
+    else if (dark_mode == 'true') {
+      setDarkMode(true)
+    }
+  }, [])
+
+  // updates dark mode when changed internally
   useEffect(() => {
     document.body.setAttribute("data-theme", darkMode ? 'dark-theme' : 'light-theme');
+    localStorage.setItem('darkMode', JSON.stringify(darkMode))
   }, [darkMode])
 
 
+  // fetches current user
   useEffect(() => {
     const token = getToken()
     if (!token) {
