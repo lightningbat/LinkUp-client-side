@@ -1,6 +1,17 @@
 import './style.scss'
 import { forwardRef, useState } from 'react'
 
+/**
+ * @param {Object} props - contains {input_type, default_value, placeholder, label_text, error}
+ * @param {string} props.input_type - type of the input
+ * @param {string} props.default_value - default value of the input
+ * @param {string} props.placeholder - placeholder of the input
+ * @param {string} props.label_text - text of the label
+ * @param {string} props.error - error message
+ * @param {string} props.pattern - pattern for the input
+ * @param {number} props.minLength - minimum length of the input
+ * @param {number} props.maxLength - maximum length of the input
+ */
 const InputBox = forwardRef((props, ref) => {
 
     const [showPassword, setShowPassword] = useState(false)
@@ -9,7 +20,7 @@ const InputBox = forwardRef((props, ref) => {
         <div className={`component-input ${props.error && "error"}`}>
             {props.label_text && <label>{props.label_text}</label>}
             <div className='input-box'>
-                <input type={showPassword ? "text" : props.input_type} name={props.input_name} style={{ paddingRight: props.input_type == "password" && "0" }} defaultValue={props.default_value} placeholder={props.placeholder} ref={ref} required />
+                <input type={showPassword ? "text" : props.input_type} style={{ paddingRight: props.input_type == "password" && "0" }} defaultValue={props.default_value} placeholder={props.placeholder} pattern={props.pattern} minLength={props.minLength} maxLength={props.maxLength} ref={ref} required />
                 {props.input_type === "password" && <div className="eye-icon" onClick={() => setShowPassword(!showPassword)}>
                     {showPassword ?
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-eye" viewBox="0 0 16 16">

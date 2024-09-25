@@ -2,12 +2,16 @@ import './style.scss';
 
 import { OutsideClickDetector } from '../../../../components/chat_page_comp';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useContext } from 'react';
 
-export default function Menu({selectedTab, setSelectedTab, darkMode, toggleDarkMode}) {
+import { GlobalStateContext } from '../../../../context';
+
+export default function Menu({selectedTab, setSelectedTab}) {
 
     const [ showPopup, setShowPopup ] = useState(false);
     const popupButtonRef = useRef(null);
+
+    const { darkMode, setDarkMode, currentUser } = useContext(GlobalStateContext);
 
 
     function togglePopup() {
@@ -22,17 +26,17 @@ export default function Menu({selectedTab, setSelectedTab, darkMode, toggleDarkM
     function ProfileTabPopup() {
         return (
             <div className="profile-popup">
-                <div className="profile-icon">
-                    {true ? 
-                        <img src="https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50" alt="" />
+                <div className="profile-icon" style={{backgroundColor: currentUser.bgColor}}>
+                    {currentUser.profile_img ? 
+                        <img src={currentUser.profile_img} alt="" />
                             :
-                        <h2>U</h2>
+                        <h2>{currentUser.display_name.charAt(0).toUpperCase()}</h2>
                     }
                 </div>
                 <div className="profile-info">
-                    <h3>Username</h3>
-                    <h3>@username</h3>
-                    <p>example@example.xyz</p>
+                    <h3>{currentUser.display_name}</h3>
+                    <h3>{currentUser.username}</h3>
+                    <p>{currentUser.email}</p>
                 </div>
             </div>
         )
@@ -69,7 +73,7 @@ export default function Menu({selectedTab, setSelectedTab, darkMode, toggleDarkM
                 </div>
 
                 <div className='bottom-tabs nested-tab-container'>
-                    <div className="tab theme tooltip" onClick={() => toggleDarkMode()}>
+                    <div className="tab theme tooltip" onClick={() => setDarkMode(!darkMode)}>
                         <span className="tooltiptext">Theme</span>
                         {darkMode ? 
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-moon" viewBox="0 0 16 16">
@@ -84,10 +88,10 @@ export default function Menu({selectedTab, setSelectedTab, darkMode, toggleDarkM
                         { showPopup && <OutsideClickDetector style={{ position: "absolute", left: '30px', bottom: '30px', zIndex: '1000', cursor: 'default' }} closePopup={closePopup} buttonRef={popupButtonRef}>
                             <ProfileTabPopup />
                         </OutsideClickDetector>}
-                        {false ? 
-                            <img src="https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50" alt="profile icon" onClick={() => togglePopup()} ref={popupButtonRef}/>
+                        {currentUser.profile_img ? 
+                            <img src={currentUser.profile_img} alt="" onClick={() => togglePopup()} ref={popupButtonRef}/>
                             :
-                            <div className="no-img-profile-icon" onClick={() => togglePopup()} ref={popupButtonRef}><p>U</p></div>
+                            <div className="no-img-profile-icon" style={{backgroundColor: currentUser.bgColor}} onClick={() => togglePopup()} ref={popupButtonRef}><p>{currentUser.display_name.charAt(0).toUpperCase()}</p></div>
                         }
                     </div>
                 </div>

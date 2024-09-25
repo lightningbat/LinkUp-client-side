@@ -95,6 +95,7 @@
                 height: $side-menu-size - 40px;
                 width: $side-menu-size - 40px;
                 border-radius: 50%;
+                flex-shrink: 0;
 
                 img {
                     height: 100%;
@@ -117,8 +118,8 @@
                     background-color: var(--menu-profile-popup-bg-color);
                     box-shadow: 0 0 10px rgba(0, 0, 0, 0.342);
                     border-radius: 20px;
-                    padding: 5px;
-                    width: 200px;
+                    padding: 10px;
+                    min-width: 200px;
 
                     .profile-icon {
                         height: 80px;

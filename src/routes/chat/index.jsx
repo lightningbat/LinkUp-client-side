@@ -59,8 +59,6 @@ export default function Chat() {
             {/* menu bar (tabs and icons) */}
 
             <Menu
-                darkMode={darkMode}
-                toggleDarkMode={toggleDarkMode}
                 selectedTab={selectedTab}
                 setSelectedTab={setSelectedTab}
             />
@@ -68,7 +66,7 @@ export default function Chat() {
             <div className="tab-content">
                 {selectedTab === "contacts" && <ContactsTab />}
                 {selectedTab === "groups" && <GroupsTab />}
-                {selectedTab === "settings" && <SettingsTab darkMode={darkMode} setDarkMode={toggleDarkMode} />}
+                {selectedTab === "settings" && <SettingsTab />}
             </div>
 
             {/* chat content */}

@@ -15,8 +15,7 @@ export default function EditProfile({closeFragment}) {
                 <p>Edit Profile</p>
             </div>
             <div className="body">
-                <InputBox label_text="Display Name" input_type="text" input_name="display_name" default_value="User Name" ref={display_name} />
-                <InputBox label_text="User Name" input_type="text" input_name="username" default_value="User Username #5464" ref={username} />
+                <InputBox label_text="Display Name" input_type="text" pattern='^[a-zA-Z0-9_\- ]*$' minLength={1} maxLength={20} placeholder="Enter display name" default_value="XYZ" ref={display_name} />
             </div>
             <div className="footer no-select">
                 <button className='save-btn'>Save</button>

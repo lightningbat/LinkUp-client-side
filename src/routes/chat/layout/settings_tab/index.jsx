@@ -1,6 +1,6 @@
 import './style.scss'
 import { OutsideClickDetector, ToggleSwitch, ProfilePicEditor } from '../../../../components/chat_page_comp'
-import { useEffect, useRef, useState } from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
 
 import { EditProfile, EditPassword, BlockedList } from './fragments'
 
@@ -9,32 +9,39 @@ import useCustomDialog from '../../../../custom/dialogs'
 import { getToken } from '../../../../services/authenticationService'
 import fetchService from '../../../../services/fetchService'
 
-export default function SettingsTab({ darkMode, setDarkMode }) {
-    const profile_info = {
-        profile_img: "https://picsum.photos/150/150",
-        bg_color: "rgb(1, 135, 197)",
-        display_name: 'User Name',
-        username: 'User Username #5464',
-        email: 'User Email',
-    }
+import { GlobalStateContext } from '../../../../context'
 
-    const [profileInfo, setProfileInfo] = useState(profile_info)
+export default function SettingsTab() {
 
+    const { currentUser, setCurrentUser, darkMode, setDarkMode } = useContext(GlobalStateContext)
+
+    // ref to the settings tab container
+    // to widen the scrollbar
     const element = useRef(null)
 
+    // holds the name of the selected fragment to be shown
     const [selectedFragment, setSelectedFragment] = useState(null)
+    // to show/hide main content of the settings tab when a fragment is selected
     const [showFragment, setShowFragment] = useState(false)
     const fragment_loader_ref = useRef(null)
 
     const [showEditPicDropdown, setShowEditPicDropdown] = useState(false)
     const edit_pic_btn_ref = useRef(null)
 
+    // to display profile pic editor
     const [profilePicEditor, setProfilePicEditor] = useState({
         display: false,
         image_file: null
     })
 
     const [editedProfileFile, setEditedProfileFile] = useState(null)
+
+    // updates the profile pic in the global context
+    useEffect(() => {
+        if (editedProfileFile) {
+            setCurrentUser({ ...currentUser, profile_img: editedProfileFile })
+        }
+    }, [editedProfileFile])
 
     const removeProfilePicEditor = () => {
         setProfilePicEditor({ display: false, image_file: null })
@@ -98,9 +105,9 @@ export default function SettingsTab({ darkMode, setDarkMode }) {
         if (confirm) {
             try {
                 const token = getToken()
-                const response = await fetchService( import.meta.env.VITE_SERVER_URL + '/deleteProfilePic', {token} )
+                const response = await fetchService(import.meta.env.VITE_SERVER_URL + '/deleteProfilePic', { token })
                 if (response.ok) {
-                    setProfileInfo({ ...profileInfo, profile_img: null })
+                    setCurrentUser({ ...currentUser, profile_img: null })
                 }
                 else {
                     let message = 'Something went wrong'
@@ -175,7 +182,7 @@ export default function SettingsTab({ darkMode, setDarkMode }) {
                     })
                     return
                 }
-                
+
                 setProfilePicEditor({ display: true, image_file: fileReader.result, imageDimensions })
             }
             fileReader.onerror = async (error) => {
@@ -218,11 +225,11 @@ export default function SettingsTab({ darkMode, setDarkMode }) {
         <div className="settings-tab" ref={element}>
             {!showFragment && <>
                 <div className='profile no-select'>
-                    <div className="profile-icon" style={{ backgroundColor: profileInfo.bg_color }}>
-                        {profileInfo.profile_img ?
-                            <img src={editedProfileFile ? editedProfileFile : profileInfo.profile_img} alt="" />
+                    <div className="profile-icon" style={{ backgroundColor: currentUser.bgColor }}>
+                        {currentUser.profile_img ?
+                            <img src={currentUser.profile_img} alt="" />
                             :
-                            <h2>{profileInfo.display_name[0]}</h2>
+                            <h2>{currentUser.display_name.charAt(0)}</h2>
                         }
                         <div className="edit-btn">
                             <svg xmlns="http://www.w3.org/2000/svg" onClick={toggleEditPicDropdown} ref={edit_pic_btn_ref} width="16" height="16" fill="currentColor" className="bi bi-pencil-fill" viewBox="0 0 16 16">
@@ -233,7 +240,7 @@ export default function SettingsTab({ darkMode, setDarkMode }) {
                                     <div className="edit-btn-dropdown">
                                         <ul>
                                             <li onClick={selectDPimage}>Upload photo</li>
-                                            {/*profileInfo.profile_img*/ true && <li onClick={handleConfirmDeleteDP}>Remove photo</li>}
+                                            {currentUser.profile_img && <li onClick={handleConfirmDeleteDP}>Remove photo</li>}
                                         </ul>
                                     </div>
                                 </OutsideClickDetector>}
@@ -241,7 +248,7 @@ export default function SettingsTab({ darkMode, setDarkMode }) {
                         </div>
                     </div>
 
-                    <h2 className="profile-name">{profileInfo.display_name}</h2>
+                    <h2 className="profile-name">{currentUser.display_name}</h2>
                 </div>
 
                 <div className="setting-options no-select">
