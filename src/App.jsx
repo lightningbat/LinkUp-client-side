@@ -5,8 +5,12 @@ import { useState, useEffect } from 'react'
 import { getToken } from './services/authenticationService'
 import fetchService from './services/fetchService'
 import { GlobalStateContext } from './context';
+import { GrowingShrinkingSquare } from './custom/loading_animations';
+import useCustomDialog from './custom/dialogs';
 
 export default function App() {
+
+  const customDialogs = useCustomDialog()
 
   const [currentRoute, setCurrentRoute] = useState(null)
   const [currentUser, setCurrentUser] = useState(null)
@@ -45,13 +49,30 @@ export default function App() {
           setCurrentUser(response.responseData)
           setCurrentRoute('chat')
         }
-        else {
+        else if (response.status == 400) {
           setCurrentRoute('authentication')
+        }
+        else {
+          console.log(response)
+          let message = 'Something went wrong'
+          if (response.responseType == 'json') {
+            message = response.responseData.message
+          }
+          else if (response.responseType == 'text') {
+            message = response.responseData
+          }
+          await customDialogs({
+            type: 'alert',
+            description: message,
+          })
         }
       }
       catch (error) {
-        setCurrentRoute('authentication')
         console.log("Error in getCurrentUser: ", error)
+        await customDialogs({
+          type: 'alert',
+          description: 'Something went wrong!',
+        })
       }
     })()
 
@@ -59,6 +80,11 @@ export default function App() {
 
   return (
     <>
+      {currentRoute == null && 
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+          <GrowingShrinkingSquare color='var(--selected-menu-tab-icon-color)' scale={5} />
+        </div>
+      }
       {currentRoute == 'authentication' && <Authentication setRoute={setCurrentRoute} />}
       <GlobalStateContext.Provider value={{ currentUser, setCurrentUser, darkMode, setDarkMode }}>
         {currentRoute == 'chat' && <Chat />}
