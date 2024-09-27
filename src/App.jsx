@@ -14,6 +14,8 @@ export default function App() {
 
   const [currentRoute, setCurrentRoute] = useState(null)
   const [currentUser, setCurrentUser] = useState(null)
+  // to load chat route only when required data is loaded
+  const [isDataLoaded, setIsDataLoaded] = useState(false)
   const [darkMode, setDarkMode] = useState(false)
 
   // sets dark mode from local storage
@@ -48,6 +50,7 @@ export default function App() {
         if (response.ok) {
           setCurrentUser(response.responseData)
           setCurrentRoute('chat')
+          setIsDataLoaded(true)
         }
         else if (response.status == 400) {
           setCurrentRoute('authentication')
@@ -87,7 +90,7 @@ export default function App() {
       }
       {currentRoute == 'authentication' && <Authentication setRoute={setCurrentRoute} />}
       <GlobalStateContext.Provider value={{ currentUser, setCurrentUser, darkMode, setDarkMode }}>
-        {currentRoute == 'chat' && <Chat />}
+        {currentRoute == 'chat' && isDataLoaded && <Chat />}
       </GlobalStateContext.Provider>
     </>
   )

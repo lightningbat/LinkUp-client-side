@@ -1,9 +1,15 @@
-.Chat{
-    .groups-tab{
+.Chat .groups-tab {
+    display: none;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    font-size: 25px;
+
+    &.visible {
         display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100%;
-        font-size: 25px;
+    }
+
+    &.hidden {
+        display: none;
     }
 }

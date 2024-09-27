@@ -5,7 +5,7 @@ import { useEffect, useRef } from 'react';
 
 import contact_data from '../../../../test_data/contact_data.json'
 
-export default function ContactsTab() {
+export default function ContactsTab({visibility}) {
 
     // reference to the list container
     const element = useRef(null)
@@ -38,7 +38,7 @@ export default function ContactsTab() {
     })
 
     return (
-        <div className="contacts-tab">
+        <div className={`contacts-tab ${visibility}`}>
             <SearchBox />
             <div className="contacts-list-container" ref={element}>
                 <div className="contacts-list">

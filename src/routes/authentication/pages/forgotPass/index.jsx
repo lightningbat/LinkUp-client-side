@@ -25,6 +25,7 @@ export default function ForgotPass({ changePage, defaultValue, setUserInput, pag
     const handleSubmit = async (event) => {
         event.preventDefault()
         setSubmitting(true);
+        setErrorStatus(null, null)
 
         const input_value = {
             "email": _email.current.value

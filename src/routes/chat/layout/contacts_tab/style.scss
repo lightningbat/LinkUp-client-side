@@ -1,35 +1,43 @@
-.Chat {
-    .contacts-tab {
-        height: 100%;
-        padding-top: 2em;
-        display: flex;
-        flex-direction: column;
-        gap: 1em;
+.Chat .contacts-tab {
+    height: 100%;
+    padding-top: 2em;
+    display: none;
+    flex-direction: column;
+    gap: 1em;
 
-        .contacts-list-container {
-            flex: 1;
-            padding: 0 5px;
-            overflow-y: auto;
-        }
-
-
-        .contacts-list-container::-webkit-scrollbar {
-            width: 8px;
-        }
-        .more-width::-webkit-scrollbar {
-            width: 15px;
-        }
-        .contacts-list-container::-webkit-scrollbar-thumb {
-            background: var(--scrollbar-thumb-color);
-            border-radius: 10px;
-        }
-
-        @-moz-document url-prefix() {
-            .contacts-list-container {
-                scrollbar-width: thin;
-                scrollbar-color: var(--scrollbar-thumb-color) transparent;
-            }
-        }
-
+    &.hidden {
+        display: none;
     }
+
+    &.visible {
+        display: flex;
+    }
+
+    .contacts-list-container {
+        flex: 1;
+        padding: 0 5px;
+        overflow-y: auto;
+    }
+
+
+    .contacts-list-container::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .more-width::-webkit-scrollbar {
+        width: 15px;
+    }
+
+    .contacts-list-container::-webkit-scrollbar-thumb {
+        background: var(--scrollbar-thumb-color);
+        border-radius: 10px;
+    }
+
+    @-moz-document url-prefix() {
+        .contacts-list-container {
+            scrollbar-width: thin;
+            scrollbar-color: var(--scrollbar-thumb-color) transparent;
+        }
+    }
+
 }

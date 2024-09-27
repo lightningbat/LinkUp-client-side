@@ -11,7 +11,7 @@ import fetchService from '../../../../services/fetchService'
 
 import { GlobalStateContext } from '../../../../context'
 
-export default function SettingsTab() {
+export default function SettingsTab({ visibility }) {
 
     const { currentUser, setCurrentUser, darkMode, setDarkMode } = useContext(GlobalStateContext)
 
@@ -222,7 +222,7 @@ export default function SettingsTab() {
     }
 
     return (
-        <div className="settings-tab" ref={element}>
+        <div className={`settings-tab ${visibility}`} ref={element}>
             {!showFragment && <>
                 <div className='profile no-select'>
                     <div className="profile-icon" style={{ backgroundColor: currentUser.bgColor }}>

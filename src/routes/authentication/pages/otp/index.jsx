@@ -51,6 +51,7 @@ export default function OTP_Page({ changePage, setRoute, redirectedFrom, userEma
         }
 
         setSubmitting(true);
+        setError({ type: null, message: null });
         const url = import.meta.env.VITE_SERVER_URL + "/verifyOTP";
         const response = await AuthenticationService(url, { email: userEmail, otp: Number(otp) });
 

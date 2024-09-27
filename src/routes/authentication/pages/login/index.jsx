@@ -43,6 +43,7 @@ export default function Login({ setRoute, changePage, defaultValue, setUserInput
     const handleSubmit = async (event) => {
         event.preventDefault()
         setSubmitting(true);
+        setErrorStatus(null, null)
 
         const input_value = {
             "email": _email.current.value,

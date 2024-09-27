@@ -31,6 +31,7 @@ export default function ResetPass({ changePage, pageTransitionStyle }) {
     const handleSubmit = async (event) => {
         event.preventDefault()
         setSubmitting(true);
+        setError({type: null, message: null})
 
         const input_value = {
             "new_password": _password.current.value
