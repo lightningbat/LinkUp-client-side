@@ -1,24 +1,24 @@
 import './style.scss';
 
 import { Menu, ContactsTab, GroupsTab, SettingsTab } from './layout'
-
+import { getToken } from '../../services/authenticationService'
 import { useEffect, useState, useRef } from 'react';
-import io from "socket.io-client";
+import { socket } from '../../socket';
 
 export default function Chat() {
-
     useEffect(() => {
-        const socket = io("http://192.168.43.79:3000");
-    
-        socket.on("connect", () => {
-            console.log(`Connected to server: ${socket.id}`);
-        });
-    },[])
+        socket.auth.token = getToken();
+        socket.connect();
 
+        return () => {
+            socket.disconnect();
+        }
+    }, []);
+    
     const [displayChat, setDisplayChat] = useState(false);
     const [darkMode, setDarkMode] = useState(false);
     const [selectedTab, setSelectedTab] = useState("contacts");
-    // set the style of the tab based on the selected tab
+    // sets the style of the tab based on the selected tab
     // "null" : not loaded
     // "visible" : visible and loaded
     // "hidden" : hidden but loaded

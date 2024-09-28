@@ -8,6 +8,8 @@ import { GlobalStateContext } from './context';
 import { GrowingShrinkingSquare } from './custom/loading_animations';
 import useCustomDialog from './custom/dialogs';
 
+import { socket } from './socket';
+
 export default function App() {
 
   const customDialogs = useCustomDialog()
@@ -81,9 +83,41 @@ export default function App() {
 
   }, [currentRoute])
 
+  useEffect(() => {
+    function onConnect() {
+      console.log('Connected to the socket server');
+    }
+
+    function onDisconnect() {
+      if (socket.active) {
+        console.log('Temporarily disconnected, the socket will be reconnected');
+      } else {
+        console.log('Disconnected from the socket server');
+      }
+    }
+
+    function onConnectError(error) {
+      if (socket.active) {
+        console.log('Temporary failure, the socket will be reconnected: ', error);
+      } else {
+        console.log('Error connecting to the socket server: ', error);
+      }
+    }
+
+    socket.on("connect", onConnect);
+    socket.on("disconnect", onDisconnect);
+    socket.on("connect_error", onConnectError);
+
+    return () => {
+      socket.off('connect', onConnect);
+      socket.off('disconnect', onDisconnect);
+      socket.off('connect_error', onConnectError);
+    };
+  }, []);
+
   return (
     <>
-      {currentRoute == null && 
+      {currentRoute == null &&
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
           <GrowingShrinkingSquare color='var(--selected-menu-tab-icon-color)' scale={5} />
         </div>
