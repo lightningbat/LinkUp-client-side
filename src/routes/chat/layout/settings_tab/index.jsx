@@ -6,7 +6,7 @@ import { EditProfile, EditPassword, BlockedList } from './fragments'
 
 import useCustomDialog from '../../../../custom/dialogs'
 
-import { getToken } from '../../../../services/authenticationService'
+import { getToken, removeToken } from '../../../../services/authenticationService'
 import fetchService from '../../../../services/fetchService'
 
 import { GlobalStateContext } from '../../../../context'
@@ -221,6 +221,21 @@ export default function SettingsTab({ visibility }) {
         })
     }
 
+    async function logout() {
+        const confirm = await customDialogs({
+            type: 'confirm',
+            title: 'Logout',
+            description: 'Are you sure you want to logout?',
+            confirmText: 'Yes',
+            cancelText: 'No',
+        })
+
+        if (confirm) {
+            removeToken()
+            location.reload()
+        }
+    }
+
     return (
         <div className={`settings-tab ${visibility}`} ref={element}>
             {!showFragment && <>
@@ -285,7 +300,7 @@ export default function SettingsTab({ visibility }) {
                     </div>
                 </div>
                 <div className="page-footer">
-                    <button className="logout-btn cursor-pointer" >Logout</button>
+                    <button className="logout-btn cursor-pointer" onClick={logout} >Logout</button>
                 </div>
             </>}
 
