@@ -112,7 +112,8 @@ $contact-image-size: 40px;
 
     @media screen and (max-width: 300px) {
         .contact {
-            padding: 0 5px;
+            padding-left: 5px;
+            padding-right: 5px;
         }
     }
 }

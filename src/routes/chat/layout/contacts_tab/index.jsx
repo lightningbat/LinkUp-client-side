@@ -1,5 +1,5 @@
 import './style.scss'
-import { SearchBox, ContactBox } from "../../../../components/chat_page_comp"
+import { UserSearchBox, ContactBox } from "../../../../components/chat_page_comp"
 
 import { useEffect, useRef } from 'react';
 
@@ -9,6 +9,7 @@ export default function ContactsTab({visibility}) {
 
     // reference to the list container
     const element = useRef(null)
+    const user_search_box_ref = useRef();
 
     // add "more-width" class to the list container when the mouse moves over it
     // this makes the scrollbar more wider
@@ -39,12 +40,14 @@ export default function ContactsTab({visibility}) {
 
     return (
         <div className={`contacts-tab ${visibility}`}>
-            <SearchBox />
+            <UserSearchBox ref={user_search_box_ref} />
             <div className="contacts-list-container" ref={element}>
                 <div className="contacts-list">
                     {sorted_contact_data.map((contact) => <ContactBox key={contact.contact_id} {...contact} />)}
                 </div>
-                <div className="search-result"></div>
+                <div className="search-result">
+
+                </div>
             </div>
         </div>
     )

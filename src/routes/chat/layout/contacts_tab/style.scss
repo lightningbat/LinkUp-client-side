@@ -4,6 +4,7 @@
     display: none;
     flex-direction: column;
     gap: 1em;
+    container-type: inline-size;
 
     &.hidden {
         display: none;

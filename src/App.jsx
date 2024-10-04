@@ -1,3 +1,5 @@
+import './App.css'
+
 import Authentication from './routes/authentication'
 import Chat from './routes/chat';
 
@@ -125,6 +127,10 @@ export default function App() {
       {currentRoute == 'authentication' && <Authentication setRoute={setCurrentRoute} />}
       <GlobalStateContext.Provider value={{ currentUser, setCurrentUser, darkMode, setDarkMode }}>
         {currentRoute == 'chat' && isDataLoaded && <Chat />}
+        <div className='floating-btns'>
+          <button className='floating-button' onClick={() => { socket.disconnect() }}>Disconnect</button>
+          <button className='floating-button' onClick={() => { socket.connect() }}>Connect</button>
+        </div>
       </GlobalStateContext.Provider>
     </>
   )
