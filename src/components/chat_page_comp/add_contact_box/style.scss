@@ -1,0 +1,108 @@
+@import '../../../style/variables.scss';
+
+.Chat .add-contact-box {
+    background-color: var(--tab-content-bg-color);
+    padding: 15px 10px;
+    height: fit-content;
+    width: 95vw;
+    max-width: 450px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.315);
+    container-type: inline-size;
+
+    .add-contact-form {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
+        .input-box {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            background-color: var(--contacts-tab-search-box-bg-color);
+            border-radius: 5px;
+            height: 100%;
+            width: 100%;
+
+            .search-icon {
+                height: $search-box-height;
+                width: fit-content;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 0 5px;
+                cursor: pointer;
+
+                svg {
+                    width: 18px;
+                    height: 18px;
+                    fill: var(--contacts-tab-search-box-icon-color);
+                }
+            }
+
+            input {
+                flex: 1;
+                height: 100%;
+                width: 100%;
+                border: none;
+                outline: none;
+                font-size: 16px;
+                background-color: transparent;
+                color: var(--primary-text-color);
+                padding: 0;
+
+                &::placeholder {
+                    color: var(--placeholder-color);
+                    text-transform: capitalize;
+                }
+            }
+
+            .clear-btn {
+                height: 25px;
+                width: 25px;
+                cursor: pointer;
+
+                svg {
+                    width: 100%;
+                    height: 100%;
+                    fill: var(--primary-text-color);
+                }
+            }
+        }
+
+        .submit-btn {
+            width: 80px;
+            height: $search-box-height;
+            background-color: var(--contacts-tab-search-box-bg-color);
+            border: 0;
+            border-radius: 5px;
+            color: var(--primary-text-color);
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+
+            &:hover {
+                opacity: 0.8;
+            }
+        }
+
+        @container (max-width: 280px) {
+            & {
+                flex-direction: column;
+
+                .submit-btn {
+                    width: 100%;
+                }
+            }
+        }
+    }
+
+    .search-result {
+        margin-top: 10px;
+        min-height: 50px;
+
+        .result-msg {
+            text-align: center;
+        }
+    }
+}

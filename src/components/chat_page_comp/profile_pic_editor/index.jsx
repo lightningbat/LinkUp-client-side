@@ -66,11 +66,10 @@ export default function ProfilePicEditor({ image_file, closeProfilePicEditor, im
     }
 
     async function uploadImage({ base64_image }) {
-        const base_url = import.meta.env.VITE_SERVER_URL
         const token = getToken()
 
         try {
-            const response = await fetchService(base_url + "/setProfilePic", {image: base64_image, token})
+            const response = await fetchService("setProfilePic", {image: base64_image, token})
             if (response.ok) {
                 setEditedProfileFile(base64_image)
                 closeProfilePicEditor()

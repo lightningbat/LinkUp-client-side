@@ -1,12 +1,13 @@
 /**
  * 
- * @param {string} url - base url + route to send the request
+ * @param {string} route - route to send the request
  * @param {object} payload - data to send
  * @returns {object} response from the server
  */
-export default async function FetchService(url, payload) {
+export default async function FetchService(route, payload) {
     try {
-        const res = await fetch(url, {
+        const base_url = import.meta.env.VITE_SERVER_URL;
+        const res = await fetch(`${base_url}/${route}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

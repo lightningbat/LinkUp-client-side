@@ -95,8 +95,8 @@ export function CustomDialogsProvider({ children }) {
  * @param {string} type - 'confirm' or 'alert'
  * @param {string} title - title of the dialog
  * @param {string} description - description of the dialog
- * @param {string} confirmText - text of the confirm button
- * @param {string} cancelText - text of the cancel button
+ * @param {string} confirmText - (optional) text for the confirm button
+ * @param {string} cancelText - (optional) text for the cancel button
  * @returns {Promise}
  */
 export default function useCustomDialog() {

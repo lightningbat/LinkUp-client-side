@@ -1,113 +1,61 @@
 $search-box-size: 40px;
 
-.Chat .user-search-box {
+.Chat .search-box {
     height: $search-box-size;
     display: flex;
+    align-items: center;
     justify-content: center;
-    gap: 10px;
     width: 100%;
-    padding: 0 10px;
-    overflow-x: auto;
+    border-radius: 4px;
+    height: $search-box-size;
+    background-color: var(--contacts-tab-search-box-bg-color);
 
-    &::-webkit-scrollbar {
-        height: 0;
-    }
-
-    .add-user-btn {
-        width: $search-box-size + 20px;
-        min-width: $search-box-size;
-        height: $search-box-size;
+    .start-icon {
         display: flex;
         justify-content: center;
         align-items: center;
-        cursor: pointer;
-        user-select: none;
-        background-color: var(--contacts-tab-search-box-bg-color);
-        border-radius: $search-box-size;
-
-        &.active {
-            color: var(--selected-menu-tab-icon-color);
-        }
-
-        &:hover {
-            opacity: 0.8;
-        }
-    }
-
-    .input-box {
-        background-color: var(--contacts-tab-search-box-bg-color);
-        display: flex;
-        align-items: center;
+        width: $search-box-size;
+        height: $search-box-size;
         border-radius: 4px;
-        height: $search-box-size;
-        flex: 1;
-        width: 100%;
-        
-        .icon {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: $search-box-size;
-            height: $search-box-size;
-            border-radius: 4px;
-            cursor: pointer;
-            user-select: none;
-            flex-shrink: 0;
-
-            svg {
-                width: 100%;
-                height: 100%;
-                padding: 10px;
-                fill: var(--contacts-tab-search-box-icon-color);
-                margin: 0;
-            }
-        }
-
-        input {
-            color: var(--primary-text-color);
-            flex: 1;
-            height: 100%;
-            font-size: 15px;
-            outline: none;
-            border: 0;
-            background-color: transparent;
-            padding-right: 1em;
-            letter-spacing: 0.2px;
-            width: 100%;
-
-            &::placeholder {
-                color: var(--placeholder-color);
-            }
-        }
-    }
-
-    button {
-        height: $search-box-size;
-        width: 100px;
-        border: 0;
-        background-color: var(--contacts-tab-search-box-bg-color);
-        color: var(--primary-text-color);
-        font-size: 15px;
-        font-weight: 400;
         cursor: pointer;
         user-select: none;
-        border-radius: 7px;
-        padding: 0 20px;
-        display: none;
+        flex-shrink: 0;
 
-        &:hover {
-            opacity: 0.8;
+        svg {
+            width: 100%;
+            height: 100%;
+            padding: 10px;
+            fill: var(--contacts-tab-search-box-icon-color);
+            margin: 0;
         }
     }
 
-    @container  (max-width: 450px) {
-        & {
-            flex-direction: column;
-            height: fit-content;
+    input {
+        color: var(--primary-text-color);
+        flex: 1;
+        height: 100%;
+        font-size: 15px;
+        outline: none;
+        border: 0;
+        background-color: transparent;
+        letter-spacing: 0.2px;
+        width: 100%;
 
-            button {
-                width: 100%;
-            }
+        &::placeholder {
+            color: var(--placeholder-color);
+        }
+    }
+
+    .clear-icon {
+        height: $search-box-size - 10px;
+        width: $search-box-size - 10px;
+        cursor: pointer;
+
+        svg {
+            width: 100%;
+            height: 100%;
+            fill: var(--contacts-tab-search-box-icon-color);
+            margin: 0;
         }
     }
 }

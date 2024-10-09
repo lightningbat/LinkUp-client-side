@@ -50,7 +50,7 @@ export default function App() {
 
     (async () => {
       try {
-        const response = await fetchService(import.meta.env.VITE_SERVER_URL + '/getUser', { token })
+        const response = await fetchService('getUser', { token })
         if (response.ok) {
           setCurrentUser(response.responseData)
           setCurrentRoute('chat')

@@ -14,12 +14,33 @@
         display: flex;
     }
 
+    .left-right {
+        display: flex;
+        gap: 1em;
+        padding: 0 5px;
+
+        .add-user-btn {
+            height: 40px;
+            width: 60px;
+            background-color: var(--contacts-tab-search-box-bg-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 20px;
+
+            svg {
+                width: 20px;
+                height: 20px;
+                fill: var(--primary-text-color);
+            }
+        }
+    }
+
     .contacts-list-container {
         flex: 1;
         padding: 0 5px;
         overflow-y: auto;
     }
-
 
     .contacts-list-container::-webkit-scrollbar {
         width: 8px;

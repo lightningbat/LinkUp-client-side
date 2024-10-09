@@ -1,6 +1,11 @@
 import { useRef, useEffect, useState } from "react";
 
-
+/**
+ * @param {object} style - styles of the component
+ * @param {function} closePopup - function to close the popup
+ * @param {ref} buttonRef - (optional) reference to the call button
+ * @param {children} children - content inside the component
+*/
 export default function OutsideClickDetector(props) {
     const wrapperRef = useRef(null);
 
@@ -9,11 +14,14 @@ export default function OutsideClickDetector(props) {
     useEffect(() => {
         function handleClickOutside(event) {
             if (('buttonRef' in props)) {
+                // not to detect click on the call button as outside click
                 if ((wrapperRef.current && !wrapperRef.current.contains(event.target)) && (props.buttonRef.current && !props.buttonRef.current.contains(event.target))) {
+                    // close if the clicked outside the container or button
                     props.closePopup();
                 }
             }
             else if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
+                // close if the clicked outside the container
                 props.closePopup();
             }
         }

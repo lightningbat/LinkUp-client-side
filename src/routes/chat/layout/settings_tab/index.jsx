@@ -105,7 +105,7 @@ export default function SettingsTab({ visibility }) {
         if (confirm) {
             try {
                 const token = getToken()
-                const response = await fetchService(import.meta.env.VITE_SERVER_URL + '/deleteProfilePic', { token })
+                const response = await fetchService('deleteProfilePic', { token })
                 if (response.ok) {
                     setCurrentUser({ ...currentUser, profile_img: null })
                 }
