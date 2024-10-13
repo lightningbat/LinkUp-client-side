@@ -38,7 +38,8 @@ const UserSearchBox = forwardRef((props, ref) => {
 
     const cancelSearch = () => {
         ref.current.value = ""
-        // after this onBlur will get called automatically
+        setShowClearBtn(false)
+        setFocused(false)
     }
 
     const clearSearch = () => {

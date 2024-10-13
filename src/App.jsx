@@ -22,6 +22,9 @@ export default function App() {
   const [isDataLoaded, setIsDataLoaded] = useState(false)
   const [darkMode, setDarkMode] = useState(false)
 
+  // error state for fetching user
+  const [errorFetchingUser, setErrorFetchingUser] = useState(false)
+
   // sets dark mode from local storage
   useEffect(() => {
     const dark_mode = localStorage.getItem('darkMode')
@@ -33,14 +36,14 @@ export default function App() {
     }
   }, [])
 
-  // updates dark mode when changed internally
+  // updates dark mode when changed by user
   useEffect(() => {
     document.body.setAttribute("data-theme", darkMode ? 'dark-theme' : 'light-theme');
     localStorage.setItem('darkMode', JSON.stringify(darkMode))
   }, [darkMode])
 
 
-  // fetches current user
+  // fetches current user info
   useEffect(() => {
     const token = getToken()
     if (!token) {
@@ -61,6 +64,7 @@ export default function App() {
         }
         else {
           console.log(response)
+          setErrorFetchingUser(true)
           let message = 'Something went wrong'
           if (response.responseType == 'json') {
             message = response.responseData.message
@@ -70,21 +74,23 @@ export default function App() {
           }
           await customDialogs({
             type: 'alert',
-            description: message,
+            description: `${message}\n\nTry refreshing the page`,
           })
         }
       }
       catch (error) {
+        setErrorFetchingUser(true)
         console.log("Error in getCurrentUser: ", error)
         await customDialogs({
           type: 'alert',
-          description: 'Something went wrong!',
+          description: 'Something went wrong!\n\nTry refreshing the page',
         })
       }
     })()
 
   }, [currentRoute])
 
+  // socket connection
   useEffect(() => {
     function onConnect() {
       console.log('Connected to the socket server');
@@ -119,7 +125,7 @@ export default function App() {
 
   return (
     <>
-      {currentRoute == null &&
+      {currentRoute == null && !errorFetchingUser &&
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
           <GrowingShrinkingSquare color='var(--selected-menu-tab-icon-color)' scale={5} />
         </div>

@@ -40,6 +40,22 @@
         flex: 1;
         padding: 0 5px;
         overflow-y: auto;
+
+        .empty-list {
+            height: 100%;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            svg {
+                width: 200px;
+                height: 200px;
+                object-fit: contain;
+                fill: var(--primary-text-color);
+                stroke: var(--primary-text-color);
+            }
+        }
     }
 
     .contacts-list-container::-webkit-scrollbar {

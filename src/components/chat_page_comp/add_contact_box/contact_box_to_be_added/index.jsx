@@ -5,8 +5,20 @@ import FetchService from '../../../../services/fetchService';
 import { getToken } from '../../../../services/authenticationService';
 import { Spinner } from '../../../../custom/loading_animations';
 import useCustomDialog from '../../../../custom/dialogs';
+import PropTypes from 'prop-types';
 
-export default function ContactBoxToBeAdded({ user_data, delCacheElement }) {
+ContactBoxToBeAdded.propTypes = {
+    user_data: PropTypes.shape({
+        user_id: PropTypes.string.isRequired,
+        profile_img: PropTypes.string,
+        bgColor: PropTypes.string.isRequired,
+        display_name: PropTypes.string.isRequired,
+        username: PropTypes.string.isRequired
+    }),
+    delCacheElement: PropTypes.func,
+    addNewContact: PropTypes.func.isRequired
+}
+export default function ContactBoxToBeAdded({ user_data, delCacheElement, addNewContact }) {
 
     /*
     0: initial state
@@ -22,6 +34,8 @@ export default function ContactBoxToBeAdded({ user_data, delCacheElement }) {
         if (res.ok) {
             setRequestStatus(2);
             delCacheElement(user_data.user_id);
+            const { time, online, last_seen } = res.responseData;
+            addNewContact({...user_data, "contact_added_at": time, "online": online, "last_seen": last_seen, "last_message_info": null});
         } else {
             setRequestStatus(0);
             let message = res.responseType == 'json' ? res.responseData.message : res.responseData;
@@ -35,7 +49,7 @@ export default function ContactBoxToBeAdded({ user_data, delCacheElement }) {
     return (
         <div className="contact-box-to-be-added">
             <div className='left-right'>
-                <div className="profile-icon" style={{ backgroundColor: user_data.bg_color }}>
+                <div className="profile-icon" style={{ backgroundColor: user_data.bgColor }}>
                     {user_data.profile_img ?
                         <img src={user_data.profile_img} alt="" />
                         :

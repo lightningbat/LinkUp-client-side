@@ -6,6 +6,7 @@ import { BouncingDots } from '../../../custom/loading_animations';
 import fetchService from '../../../services/fetchService';
 import ContactBoxToBeAdded from './contact_box_to_be_added';
 import { getToken } from '../../../services/authenticationService';
+import PropTypes from 'prop-types';
 
 /* if we keep the local_cache outside the function, 
 it will only be initialized once when the component mounts, 
@@ -17,7 +18,12 @@ it will be re-initialized every time the component is re-rendered. */
 // temporally store the search results in local cache
 let local_cache = [];
 
-export default function AddContactBox({ closePopup, btnRef }) {
+AddContactBox.propTypes = {
+    closePopup: PropTypes.func.isRequired,
+    btnRef: PropTypes.object,
+    addNewContact: PropTypes.func.isRequired
+}
+export default function AddContactBox({ closePopup, btnRef, addNewContact }) {
     const inputRef = useRef(null);
     const [showClearBtn, setShowClearBtn] = useState(false);
     const [showSearchResult, setShowSearchResult] = useState(false);
@@ -34,6 +40,7 @@ export default function AddContactBox({ closePopup, btnRef }) {
         };
     }, []);
 
+    // keydown listener
     useEffect(() => {
         // focus the input when the component mounts
         inputRef.current.focus();
@@ -86,8 +93,7 @@ export default function AddContactBox({ closePopup, btnRef }) {
         let in_local_cache = false;
 
         if (local_cache) {
-
-            local_cache.forEach((contact, index, array) => {
+            local_cache.forEach((contact) => {
                 if (contact.username == input_value) {
                     setLoading(false);
                     setSearchResult(contact);
@@ -143,7 +149,7 @@ export default function AddContactBox({ closePopup, btnRef }) {
                 </form>
                 {showSearchResult && <div className="search-result">
                     {loading && <BouncingDots scale={1} />}
-                    {searchResult && typeof searchResult === 'object' && <ContactBoxToBeAdded user_data={searchResult} delCacheElement={delCacheElement} />}
+                    {searchResult && typeof searchResult === 'object' && <ContactBoxToBeAdded user_data={searchResult} delCacheElement={delCacheElement} addNewContact={addNewContact} />}
                     {searchResult && typeof searchResult === 'string' && <p className='result-msg'>{searchResult}</p>}
                 </div>}
             </div>

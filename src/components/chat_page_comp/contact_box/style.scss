@@ -24,6 +24,7 @@ $contact-image-size: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
+            flex-shrink: 0;
 
             img {
                 width: 100%;
@@ -73,9 +74,21 @@ $contact-image-size: 40px;
 
                 overflow: hidden;
                 display: -webkit-box;
-                -webkit-line-clamp: 1; /* number of lines to show */
+                -webkit-line-clamp: 1;
+                /* number of lines to show */
                 line-clamp: 2;
                 -webkit-box-orient: vertical;
+
+                .type-image {
+                    display: flex;
+                    align-items: center;
+                    gap: 5px;
+
+                    svg {
+                        width: 15px;
+                        height: 15px;
+                    }
+                }
             }
         }
 
