@@ -10,13 +10,19 @@ export default function Chat() {
         socket.auth.token = getToken();
         socket.connect();
 
+        /* ****** for testing purposes ****** */
+        // setTimeout(() => {
+        //     if (socket.io.engine) {
+        //         socket.io.engine.close()
+        //     }
+        // }, 5000)
+
         return () => {
             socket.disconnect();
         }
     }, []);
     
     const [displayChat, setDisplayChat] = useState(false);
-    const [darkMode, setDarkMode] = useState(false);
     const [selectedTab, setSelectedTab] = useState("contacts");
     // sets the style of the tab based on the selected tab
     // "null" : not loaded
@@ -50,6 +56,7 @@ export default function Chat() {
     }
 
     const chat_page_ref = useRef(null);
+    // eslint-disable-next-line no-unused-vars
     function toggleChat() {
         setDisplayChat(!displayChat);
 
@@ -65,10 +72,10 @@ export default function Chat() {
     }
 
 
-    function toggleDarkMode() {
-        setDarkMode(!darkMode);
-        document.body.setAttribute("data-theme", darkMode ? "light-theme" : "dark-theme");
-    }
+    // function toggleDarkMode() {
+    //     setDarkMode(!darkMode);
+    //     document.body.setAttribute("data-theme", darkMode ? "light-theme" : "dark-theme");
+    // }
 
     // if (selectedTab === "contacts") {
     //     var eventlistener = getEventListeners(window)["DOMContentLoaded"][index];

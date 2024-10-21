@@ -106,7 +106,10 @@ export default function App() {
 
     function onConnectError(error) {
       if (socket.active) {
-        console.log('Temporary failure, the socket will be reconnected: ', error);
+        console.log('Temporary failure, the socket will be reconnected: ');
+        console.log("message: ", error.message);
+        console.log("description: ", error.description);
+        console.log("context: ", error.context);
       } else {
         console.log('Error connecting to the socket server: ', error);
       }

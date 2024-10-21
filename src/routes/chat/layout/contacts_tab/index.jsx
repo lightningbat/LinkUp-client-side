@@ -11,6 +11,8 @@ import { getToken } from '../../../../services/authenticationService';
 import { GlobalStateContext } from '../../../../context';
 import { BouncingDots } from '../../../../custom/loading_animations';
 
+import { socket } from '../../../../socket';
+
 // import contact_data from '../../../../test_data/contact_data.json'
 
 ContactsTab.propTypes = {
@@ -25,6 +27,7 @@ export default function ContactsTab({ visibility }) {
     const customDialogs = useCustomDialog()
     const { chat_contacts } = useContext(GlobalStateContext).currentUser;
 
+    /* ****** holds contacts list data from the backend ****** */
     const [contactsList, setContactsList] = useState(null);
 
     // reference to the list container
@@ -33,7 +36,65 @@ export default function ContactsTab({ visibility }) {
     const [showAddContactBox, setShowAddContactBox] = useState(false);
     const add_contact_box_ref = useRef();
 
-    // receiving contacts and chat data from the backend
+    function updateOnlineStatus(user_id, isOnline) {
+        // updating online status of a single user in contactList
+        if (contactsList) {
+            let updated_contacts = contactsList.map(contact => {
+                if (contact.user_id == user_id) {
+                    contact.online = isOnline
+                }
+                return contact
+            })
+            setContactsList(updated_contacts)
+        }
+    }
+
+    async function recoverContactsOnlineStatus() {
+        if (contactsList) {
+            const response = await FetchService('getContactsOnlineStatus', 
+                { token: getToken(), contacts: Object.keys(chat_contacts) })
+            
+            if (response.ok) {
+                // data : { "uuid of the contact": { "online": boolean, "last_seen": "timestamp"} }
+                const data = response.responseData;
+                let updated_contacts = contactsList.map(contact => {
+                    if (data[contact.user_id]) {
+                        contact.online = data[contact.user_id].online
+                        contact.last_seen = data[contact.user_id].last_seen
+                    }
+                    return contact
+                })
+                setContactsList(updated_contacts)
+            }
+            else {
+                customDialogs({
+                    type: 'alert',
+                    description: "Something went wrong while recovering data on reconnect\nTry refreshing the page"
+                })
+            }
+        }
+    }
+
+    function recoverDataOnReconnect() {
+        // updating online status of all users in contactList
+        recoverContactsOnlineStatus()
+    }
+
+    useEffect(() => {
+        socket.on("user_connected", (user_id) => updateOnlineStatus(user_id, true))
+        socket.on("user_disconnected", (user_id) => updateOnlineStatus(user_id, false))
+
+        socket.on("connect", recoverDataOnReconnect)
+
+        return () => {
+            socket.off("user_connected", updateOnlineStatus)
+            socket.off("user_disconnected", updateOnlineStatus)
+
+            socket.off("connect", recoverDataOnReconnect)
+        }
+    })
+
+    // receiving contacts and chat data from the backend on Startup
     useEffect(() => {
         if (!chat_contacts || Object.keys(chat_contacts).length == 0) {
             setLoading(false);
@@ -109,6 +170,10 @@ export default function ContactsTab({ visibility }) {
             new_sorted_contacts = [contact_details]
         }
         setContactsList(new_sorted_contacts)
+
+        // informing websocket that a new contact has been added
+        // so it can add the current user to the contact's socket room
+        socket.emit("added_new_contact", contact_details.user_id)
     }
 
     // add "more-width" class name to the list container when the mouse hovers over it
