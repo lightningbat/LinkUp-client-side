@@ -13,8 +13,6 @@ import { BouncingDots } from '../../../../custom/loading_animations';
 
 import { socket } from '../../../../socket';
 
-// import contact_data from '../../../../test_data/contact_data.json'
-
 ContactsTab.propTypes = {
     visibility: PropTypes.string.isRequired
 }
@@ -30,14 +28,20 @@ export default function ContactsTab({ visibility }) {
     /* ****** holds contacts list data from the backend ****** */
     const [contactsList, setContactsList] = useState(null);
 
+    // for debugging
+    // useEffect(() => {
+    //     console.log('contactsList', contactsList)
+    // }, [contactsList])
+
     // reference to the list container
     const element = useRef(null)
     const user_search_box_ref = useRef();
     const [showAddContactBox, setShowAddContactBox] = useState(false);
     const add_contact_box_ref = useRef();
 
+    /* ****** Socket Event Handler ****** */
+    // runs when a user's contact connects or disconnects
     function updateOnlineStatus(user_id, isOnline) {
-        // updating online status of a single user in contactList
         if (contactsList) {
             let updated_contacts = contactsList.map(contact => {
                 if (contact.user_id == user_id) {
@@ -49,10 +53,14 @@ export default function ContactsTab({ visibility }) {
         }
     }
 
+    /* ****** Socket Event Sub-Handler ****** */
+    // update the online status of the contact based on the
+    // data fetched from the backend after reconnect to socket
     async function recoverContactsOnlineStatus() {
         if (contactsList) {
+            const all_contacts_ids = contactsList.map(contact => contact.user_id)
             const response = await FetchService('getContactsOnlineStatus', 
-                { token: getToken(), contacts: Object.keys(chat_contacts) })
+                { token: getToken(), contacts: all_contacts_ids })
             
             if (response.ok) {
                 // data : { "uuid of the contact": { "online": boolean, "last_seen": "timestamp"} }
@@ -75,22 +83,30 @@ export default function ContactsTab({ visibility }) {
         }
     }
 
+    /* ****** Socket Event Handlers ****** */
+    // runs when the socket reconnects
     function recoverDataOnReconnect() {
         // updating online status of all users in contactList
         recoverContactsOnlineStatus()
     }
 
+    function syncNewContact(contact_details) {
+        add_new_contact(contact_details, true)
+        // joining the contact's socket room
+        socket.emit("join_new_contact_room", contact_details.user_id)
+    }
+
     useEffect(() => {
         socket.on("user_connected", (user_id) => updateOnlineStatus(user_id, true))
         socket.on("user_disconnected", (user_id) => updateOnlineStatus(user_id, false))
-
         socket.on("connect", recoverDataOnReconnect)
+        socket.on("newContact", syncNewContact)
 
         return () => {
             socket.off("user_connected", updateOnlineStatus)
             socket.off("user_disconnected", updateOnlineStatus)
-
             socket.off("connect", recoverDataOnReconnect)
+            socket.off("newContact", syncNewContact)
         }
     })
 
@@ -161,7 +177,13 @@ export default function ContactsTab({ visibility }) {
         })
     }
 
-    const add_new_contact = (contact_details) => {
+    const add_new_contact = (contact_details, called_by_socket = false) => {
+        // called_by_socket : if the function is called by the socket (to sync with other tabs)
+        // this means any other socket added this contact
+        if (contactsList && contactsList.find(contact => contact.user_id == contact_details.user_id)) {
+            // new contact is already in the list
+            return
+        }
         let new_sorted_contacts;
         if (contactsList) {
             new_sorted_contacts = sortContactsList([...contactsList, contact_details])
@@ -173,7 +195,7 @@ export default function ContactsTab({ visibility }) {
 
         // informing websocket that a new contact has been added
         // so it can add the current user to the contact's socket room
-        socket.emit("added_new_contact", contact_details.user_id)
+        if (!called_by_socket) socket.emit("join_new_contact_room", contact_details.user_id)
     }
 
     // add "more-width" class name to the list container when the mouse hovers over it

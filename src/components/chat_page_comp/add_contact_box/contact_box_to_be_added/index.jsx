@@ -34,8 +34,8 @@ export default function ContactBoxToBeAdded({ user_data, delCacheElement, addNew
         if (res.ok) {
             setRequestStatus(2);
             delCacheElement(user_data.user_id);
-            const { time, online, last_seen } = res.responseData;
-            addNewContact({...user_data, "contact_added_at": time, "online": online, "last_seen": last_seen, "last_message_info": null});
+            const { timestamp, online, last_seen } = res.responseData;
+            addNewContact({...user_data, "contact_added_at": timestamp, "online": online, "last_seen": last_seen, "last_message_info": null});
         } else {
             setRequestStatus(0);
             let message = res.responseType == 'json' ? res.responseData.message : res.responseData;
