@@ -20,7 +20,7 @@ const InputBox = forwardRef((props, ref) => {
         <div className={`component-input ${props.error && "error"}`}>
             {props.label_text && <label>{props.label_text}</label>}
             <div className='input-box'>
-                <input type={showPassword ? "text" : props.input_type} style={{ paddingRight: props.input_type == "password" && "0" }} defaultValue={props.default_value} placeholder={props.placeholder} pattern={props.pattern} minLength={props.minLength} maxLength={props.maxLength} ref={ref} required />
+                <input type={showPassword ? "text" : props.input_type} style={{ paddingRight: props.input_type == "password" && "0" }} defaultValue={props.default_value} placeholder={props.placeholder} pattern={props.pattern} minLength={props.minLength} maxLength={props.maxLength} ref={ref} title={props.title} required />
                 {props.input_type === "password" && <div className="eye-icon" onClick={() => setShowPassword(!showPassword)}>
                     {showPassword ?
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-eye" viewBox="0 0 16 16">

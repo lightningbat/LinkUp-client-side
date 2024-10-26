@@ -11,6 +11,11 @@ import fetchService from '../../../../services/fetchService'
 
 import { GlobalStateContext } from '../../../../context'
 
+import PropTypes from 'prop-types';
+
+SettingsTab.propTypes = {
+    visibility: PropTypes.string.isRequired
+}
 export default function SettingsTab({ visibility }) {
 
     const { currentUser, setCurrentUser, darkMode, setDarkMode } = useContext(GlobalStateContext)
@@ -263,7 +268,10 @@ export default function SettingsTab({ visibility }) {
                         </div>
                     </div>
 
-                    <h2 className="profile-name">{currentUser.display_name}</h2>
+                    <div>
+                        <h2 className="display-name">{currentUser.display_name}</h2>
+                        <h3 className='username'>{currentUser.username}</h3>
+                    </div>
                 </div>
 
                 <div className="setting-options no-select">

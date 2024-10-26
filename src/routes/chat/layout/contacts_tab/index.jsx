@@ -21,17 +21,19 @@ export default function ContactsTab({ visibility }) {
     // const [isDataLoaded, setIsDataLoaded] = useState(false);
     const [loading, setLoading] = useState(true);
 
-    // initializing custom dialogs
+    // getting data from context
     const customDialogs = useCustomDialog()
-    const { chat_contacts } = useContext(GlobalStateContext).currentUser;
+    const { currentUser, setCurrentUser } = useContext(GlobalStateContext);
+    const { chat_contacts } = currentUser
 
     /* ****** holds contacts list data from the backend ****** */
     const [contactsList, setContactsList] = useState(null);
 
     // for debugging
-    // useEffect(() => {
-    //     console.log('contactsList', contactsList)
-    // }, [contactsList])
+    useEffect(() => {
+        console.log('contactsList', contactsList)
+    }, [contactsList])
+
 
     // reference to the list container
     const element = useRef(null)
@@ -96,17 +98,39 @@ export default function ContactsTab({ visibility }) {
         socket.emit("join_new_contact_room", contact_details.user_id)
     }
 
+    function updateContactProfile(contact_details) { // contact_details : { user_id, display_name, username }
+        console.log('update contact profile: ', contact_details)
+        if (!contactsList) return
+
+
+        let updated_contacts = contactsList.map(contact => {
+            if (contact.user_id == contact_details.user_id) {
+                contact.display_name = contact_details.display_name
+                contact.username = contact_details.username
+            }
+            return contact
+        })
+        setContactsList(updated_contacts)
+    }
+
+    function  updateProfileSync(data) {
+        setCurrentUser({...currentUser, ...data})
+    }
     useEffect(() => {
         socket.on("user_connected", (user_id) => updateOnlineStatus(user_id, true))
         socket.on("user_disconnected", (user_id) => updateOnlineStatus(user_id, false))
         socket.on("connect", recoverDataOnReconnect)
         socket.on("newContact", syncNewContact)
+        socket.on("contact_profile_update", updateContactProfile)
+        socket.on("profile_update_sync", updateProfileSync)
 
         return () => {
             socket.off("user_connected", updateOnlineStatus)
             socket.off("user_disconnected", updateOnlineStatus)
             socket.off("connect", recoverDataOnReconnect)
             socket.off("newContact", syncNewContact)
+            socket.off("contact_profile_update", updateContactProfile)
+            socket.off("profile_update_sync", updateProfileSync)
         }
     })
 
