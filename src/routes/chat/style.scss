@@ -1,14 +1,6 @@
 @import "../../style/color_themes";
 @import '../../style/variables.scss';
 
-.test-button {
-    position: fixed;
-    top: 0;
-    right: 0;
-    z-index: 9999;
-}
-
-
 .Chat.layout-wrapper {
     display: flex;
     height: 100dvh;

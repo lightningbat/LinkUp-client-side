@@ -3,20 +3,11 @@
 .Chat {
     .settings-tab {
         height: 100%;
-        display: none;
         flex-direction: column;
         gap: 10px;
         overflow-y: auto;
         overflow-x: hidden;
         position: relative;
-
-        &.hidden {
-            display: none;
-        }
-
-        &.visible {
-            display: flex;
-        }
 
         .profile {
             display: flex;

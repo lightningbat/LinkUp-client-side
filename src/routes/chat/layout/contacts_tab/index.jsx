@@ -14,9 +14,9 @@ import { BouncingDots } from '../../../../custom/loading_animations';
 import { socket } from '../../../../socket';
 
 ContactsTab.propTypes = {
-    visibility: PropTypes.string.isRequired
+    show: PropTypes.bool
 }
-export default function ContactsTab({ visibility }) {
+export default function ContactsTab({ show }) {
 
     // const [isDataLoaded, setIsDataLoaded] = useState(false);
     const [loading, setLoading] = useState(true);
@@ -99,9 +99,7 @@ export default function ContactsTab({ visibility }) {
     }
 
     function updateContactProfile(contact_details) { // contact_details : { user_id, display_name, username }
-        console.log('update contact profile: ', contact_details)
         if (!contactsList) return
-
 
         let updated_contacts = contactsList.map(contact => {
             if (contact.user_id == contact_details.user_id) {
@@ -237,7 +235,7 @@ export default function ContactsTab({ visibility }) {
     }, [])
 
     return (
-        <div className={`contacts-tab ${visibility}`}>
+        <div className="contacts-tab" style={{ display: show ? "flex" : "none" }}>
             <div className='left-right'>
                 <div className='add-user-btn' onClick={() => setShowAddContactBox(!showAddContactBox)} ref={add_contact_box_ref}>
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-person-plus" viewBox="0 0 16 16">
@@ -266,12 +264,6 @@ export default function ContactsTab({ visibility }) {
                 </div>}
                 <div className="contacts-list">
                     {contactsList && sortContactsList(contactsList).map((contact) => <ContactBox key={contact.user_id} {...contact} />)}
-                    {/* {contactsList.map((contact_data, index) => {
-                        <div key={index}>
-
-                        </div>
-                        }   
-                    )} */}
                 </div>
                 <div className="search-result">
 

@@ -10,13 +10,14 @@ import { getToken, removeToken } from '../../../../services/authenticationServic
 import fetchService from '../../../../services/fetchService'
 
 import { GlobalStateContext } from '../../../../context'
+import { socket } from '../../../../socket'
 
 import PropTypes from 'prop-types';
 
 SettingsTab.propTypes = {
-    visibility: PropTypes.string.isRequired
+    show: PropTypes.bool
 }
-export default function SettingsTab({ visibility }) {
+export default function SettingsTab({ show }) {
 
     const { currentUser, setCurrentUser, darkMode, setDarkMode } = useContext(GlobalStateContext)
 
@@ -29,6 +30,7 @@ export default function SettingsTab({ visibility }) {
     // to show/hide main content of the settings tab when a fragment is selected
     const [showFragment, setShowFragment] = useState(false)
     const fragment_loader_ref = useRef(null)
+    const last_seen_and_online_ref = useRef(null)
 
     const [showEditPicDropdown, setShowEditPicDropdown] = useState(false)
     const edit_pic_btn_ref = useRef(null)
@@ -98,6 +100,7 @@ export default function SettingsTab({ visibility }) {
     // Initializing custom dialogs
     const customDialogs = useCustomDialog()
 
+    /* ***** PROFILE PICTURE FUNCTIONS STARTS HERE ***** */
     async function handleConfirmDeleteDP() {
         closeEditPicDropdown()
 
@@ -225,6 +228,39 @@ export default function SettingsTab({ visibility }) {
             }
         })
     }
+    /* ***** PROFILE PICTURE FUNCTIONS ENDS HERE ***** */
+
+    async function updateLastSeenAndOnline(value) {
+        const new_value = value == "everyone" ? true : false
+
+        const response = await fetchService("updateLastSeenAndOnline", { new_value: new_value, token: getToken() })
+        if (response.ok) {
+            setCurrentUser({ ...currentUser, settings: { ...currentUser.settings, last_seen_and_online: new_value } })
+        }
+        else {
+            customDialogs({
+                type: 'alert',
+                description: "Something went wrong while updating last seen and online status",
+            })
+        }
+    }
+
+    // sync last seen and online status with other tabs
+    useEffect(() => {
+        function updateLastSeenAndOnline(new_value) {
+            const old_value = currentUser.settings.last_seen_and_online
+
+            if (old_value != new_value) {
+                setCurrentUser({ ...currentUser, settings: { ...currentUser.settings, last_seen_and_online: new_value } })
+            }
+        }
+
+        socket.on("LSAS_update_sync", updateLastSeenAndOnline)
+
+        return () => {
+            socket.off("LSAS_update_sync", updateLastSeenAndOnline)
+        }
+    })
 
     async function logout() {
         const confirm = await customDialogs({
@@ -242,7 +278,7 @@ export default function SettingsTab({ visibility }) {
     }
 
     return (
-        <div className={`settings-tab ${visibility}`} ref={element}>
+        <div className="settings-tab" style={{ display: show ? "flex" : "none" }} ref={element}>
             {!showFragment && <>
                 <div className='profile no-select'>
                     <div className="profile-icon" style={{ backgroundColor: currentUser.bgColor }}>
@@ -294,9 +330,9 @@ export default function SettingsTab({ visibility }) {
                     <div className="option-btn last-seen">
                         <p>Last seen and Status</p>
                         <div className='select'>
-                            <select>
-                                <option value="Everyone">Everyone</option>
-                                <option value="Nobody">Nobody</option>
+                            <select onChange={(e) => updateLastSeenAndOnline(e.target.value)} value={currentUser.settings.last_seen_and_online ? "everyone" : "nobody"} ref={last_seen_and_online_ref}>
+                                <option value="everyone">Everyone</option>
+                                <option value="nobody">Nobody</option>
                             </select>
                         </div>
                     </div>

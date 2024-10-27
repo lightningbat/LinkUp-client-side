@@ -1,15 +1,6 @@
 .Chat .groups-tab {
-    display: none;
     justify-content: center;
     align-items: center;
     height: 100%;
     font-size: 25px;
-
-    &.visible {
-        display: flex;
-    }
-
-    &.hidden {
-        display: none;
-    }
 }
