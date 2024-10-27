@@ -43,11 +43,18 @@ export default function ContactsTab({ show }) {
 
     /* ****** Socket Event Handler ****** */
     // runs when a user's contact connects or disconnects
-    function updateOnlineStatus(user_id, isOnline) {
+    function updateOnlineStatus(user_info, isOnline) {
         if (contactsList) {
             let updated_contacts = contactsList.map(contact => {
-                if (contact.user_id == user_id) {
+                if (contact.user_id == user_info.user_id) {
                     contact.online = isOnline
+                    // updating last seen time if user went offline
+                    if (!isOnline) {
+                        contact.last_seen = user_info.last_seen
+                    }
+                    else {
+                        contact.last_seen = null
+                    }
                 }
                 return contact
             })
@@ -115,8 +122,8 @@ export default function ContactsTab({ show }) {
         setCurrentUser({...currentUser, ...data})
     }
     useEffect(() => {
-        socket.on("user_connected", (user_id) => updateOnlineStatus(user_id, true))
-        socket.on("user_disconnected", (user_id) => updateOnlineStatus(user_id, false))
+        socket.on("user_connected", (user_id) => updateOnlineStatus({ user_id }, true))
+        socket.on("user_disconnected", (user_info) => updateOnlineStatus(user_info, false))
         socket.on("connect", recoverDataOnReconnect)
         socket.on("newContact", syncNewContact)
         socket.on("contact_profile_update", updateContactProfile)

@@ -1,7 +1,11 @@
 import './style.scss'
 import { useRef } from 'react'
 import { InputBox } from '../../../../../../components/chat_page_comp'
+import PropTypes from 'prop-types'
 
+EditPassword.propTypes = {
+    closeFragment: PropTypes.func
+}
 export default function EditPassword({closeFragment}) {
     const current_password = useRef(null)
     const new_password = useRef(null)
@@ -14,14 +18,15 @@ export default function EditPassword({closeFragment}) {
                 </svg>
                 <p>Change Password</p>
             </div>
-            <div className="body">
+            <h3 className="coming-soon">Coming Soon...</h3>
+            {/* <div className="body">
                 <InputBox label_text="Current Password" input_type="password" input_name="current_password" default_value="" ref={current_password} />
                 <InputBox label_text="New Password" input_type="password" input_name="new_password" default_value="" ref={new_password} />
             </div>
             <div className="footer no-select">
                 <button className='save-btn'>Save</button>
                 <button className='cancel-btn' onClick={closeFragment}>Cancel</button>
-            </div>
+            </div> */}
         </div>
     )
 }
