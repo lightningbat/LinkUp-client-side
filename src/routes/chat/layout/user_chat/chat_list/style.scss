@@ -1,0 +1,12 @@
+.user-chat .chat-list {
+    flex: 1;
+    overflow-y: auto;
+    padding-bottom: 30px;
+
+    ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        width: 100%;
+    }
+}

@@ -35,7 +35,7 @@ export default function Menu({selectedTab, setSelectedTab}) {
                 </div>
                 <div className="profile-info">
                     <h3>{currentUser.display_name}</h3>
-                    <h3>{currentUser.username}</h3>
+                    <h3><span className="username-icon">#</span>{currentUser.username}</h3>
                     <p>{currentUser.email}</p>
                 </div>
             </div>
@@ -88,10 +88,10 @@ export default function Menu({selectedTab, setSelectedTab}) {
                         { showPopup && <OutsideClickDetector style={{ position: "absolute", left: '30px', bottom: '30px', zIndex: '1000', cursor: 'default' }} closePopup={closePopup} buttonRef={popupButtonRef}>
                             <ProfileTabPopup />
                         </OutsideClickDetector>}
-                        {currentUser.profile_img ? 
+                        {currentUser?.profile_img ? 
                             <img src={currentUser.profile_img} alt="" onClick={() => togglePopup()} ref={popupButtonRef}/>
                             :
-                            <div className="no-img-profile-icon" style={{backgroundColor: currentUser.bgColor}} onClick={() => togglePopup()} ref={popupButtonRef}><p>{currentUser.display_name.charAt(0).toUpperCase()}</p></div>
+                            <div className="no-img-profile-icon" style={{backgroundColor: currentUser?.bgColor}} onClick={() => togglePopup()} ref={popupButtonRef}><p>{currentUser?.display_name.charAt(0).toUpperCase()}</p></div>
                         }
                     </div>
                 </div>

@@ -10,6 +10,10 @@ $contact-image-size: 40px;
         transition: 0.2s ease-in-out;
         border-bottom: 1px solid var(--contact-box-border-color);
 
+        &.selected {
+            background-color: var(--contact_box-selected-bg-color);
+        }
+
         &:hover {
             background-color: var(--contact_box-hover-bg-color);
             border-bottom-color: var(--contact_box-hover-bg-color);

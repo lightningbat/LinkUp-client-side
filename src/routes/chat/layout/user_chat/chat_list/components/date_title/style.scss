@@ -1,0 +1,27 @@
+.user-chat .chat-list .date-title {
+    text-align: center;
+    position: relative;
+    margin: 20px 0;
+    
+
+    &::before {
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 1px;
+        left: 0;
+        right: 0;
+        background-color: var(--user_chat-separator-border-color);
+        top: 10px;
+    }
+
+    .title {
+        background-color: var(--user_chat-textarea-bg-color);
+        color: var(--placeholder-color);
+        position: relative;
+        font-size: 13px;
+        z-index: 1;
+        padding: 4px 12px;
+        border-radius: 5px;
+    }
+}

@@ -306,7 +306,7 @@ export default function SettingsTab({ show }) {
 
                     <div>
                         <h2 className="display-name">{currentUser.display_name}</h2>
-                        <h3 className='username'>{currentUser.username}</h3>
+                        <h3 className='username'><span className="username-icon">#</span>{currentUser.username}</h3>
                     </div>
                 </div>
 

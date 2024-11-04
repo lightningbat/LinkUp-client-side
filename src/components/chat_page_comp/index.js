@@ -6,6 +6,7 @@ import InputBox from "./input_box";
 import BlockedContactBox from "./blocked_contact_box";
 import ProfilePicEditor from "./profile_pic_editor";
 import AddContactBox from "./add_contact_box";
+import MsgInputSection from "./msg_input_section";
 
 export {
     UserSearchBox,
@@ -15,5 +16,6 @@ export {
     InputBox,
     BlockedContactBox,
     ProfilePicEditor,
-    AddContactBox
+    AddContactBox,
+    MsgInputSection
 }

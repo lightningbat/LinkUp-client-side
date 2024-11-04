@@ -16,8 +16,10 @@ export default function App() {
 
   const customDialogs = useCustomDialog()
 
-  const [currentRoute, setCurrentRoute] = useState(null)
+  const [currentRoute, setCurrentRoute] = useState(null) // 'authentication' or 'chat'
   const [currentUser, setCurrentUser] = useState(null)
+  const [contactsList, setContactsList] = useState(null)
+  const [contactsChatData, setContactsChatData] = useState({})
   // to load chat route only when required data is loaded
   const [isDataLoaded, setIsDataLoaded] = useState(false)
   const [darkMode, setDarkMode] = useState(false)
@@ -133,9 +135,19 @@ export default function App() {
           <GrowingShrinkingSquare color='var(--selected-menu-tab-icon-color)' scale={5} />
         </div>
       }
+
       {currentRoute == 'authentication' && <Authentication setRoute={setCurrentRoute} />}
-      <GlobalStateContext.Provider value={{ currentUser, setCurrentUser, darkMode, setDarkMode }}>
+
+      <GlobalStateContext.Provider
+        value={{
+          currentUser, setCurrentUser,
+          contactsList, setContactsList,
+          contactsChatData, setContactsChatData,
+          darkMode, setDarkMode
+        }}>
+
         {currentRoute == 'chat' && isDataLoaded && <Chat />}
+
         <div className='floating-btns'>
           <button className='floating-button' onClick={() => { socket.disconnect() }}>Disconnect</button>
           <button className='floating-button' onClick={() => { socket.connect() }}>Connect</button>

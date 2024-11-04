@@ -4,6 +4,8 @@
 .Chat.layout-wrapper {
     display: flex;
     height: 100dvh;
+    overflow-x: hidden;
+    background-color: var(--menu-bg-color);
 
     /* global styles starts here */
 
@@ -52,11 +54,14 @@
     .tab-content {
         width: 400px;
         background-color: var(--tab-content-bg-color);
+        border-style: solid;
+        border-width: 0 2px;
+        border-color: var(--tab-content-border-color);
     }
 
-    .chat-content {
+    .no-selected-chat {
         flex: 1;
-        background-color: rgb(random(255), random(255), random(255));
+        background-color: transparent;
     }
 
     @media screen and (max-width: 1000px) {
@@ -67,51 +72,11 @@
         .tab-content {
             width: 100%;
             height: calc(100% - $bottom-menu-size);
+            border: none;
         }
 
-        .chat-content {
+        .no-selected-chat {
             display: none;
-            position: fixed;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            left: 0;
         }
-
-        .chat-content.show {
-            display: block;
-            animation: open-chat $chat-content_anime-duration ease-in-out;
-        }
-
-        @keyframes open-chat {
-            0% {
-                opacity: 0;
-                transform: translateX(100%);
-            }
-
-            100% {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        .chat-content.hide {
-            display: block;
-            animation: close-chat $chat-content_anime-duration ease-in-out forwards;
-        }
-
-        @keyframes close-chat {
-            0% {
-                opacity: 1;
-                transform: translateX(0);
-            }
-
-            100% {
-                opacity: 0;
-                transform: translateX(100%);
-                display: none;
-            }
-        }
-
     }
 }

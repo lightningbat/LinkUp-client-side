@@ -11,7 +11,8 @@ const datePropType = (props, propName, componentName) => {
 };
 
 ContactBox.propTypes = {
-    /*openChat: PropTypes.func.isRequired,*/
+    isSelected: PropTypes.bool.isRequired,
+    openChat: PropTypes.func.isRequired,
     user_id: PropTypes.string.isRequired,
     profile_img: PropTypes.string,
     bgColor: PropTypes.string.isRequired,
@@ -24,7 +25,7 @@ ContactBox.propTypes = {
         unread_count: PropTypes.number
     })
 }
-export default function ContactBox({ /*openChat,*/ user_id, profile_img, bgColor, display_name, online, last_message_info }) {
+export default function ContactBox({ isSelected, openChat, user_id, profile_img, bgColor, display_name, online, last_message_info }) {
 
     const toShowLastMessageInfo = last_message_info && last_message_info.time;
 
@@ -65,7 +66,7 @@ export default function ContactBox({ /*openChat,*/ user_id, profile_img, bgColor
     }
 
     return (
-        <div className="contact no-select">
+        <div className={`contact no-select ${isSelected && 'selected'}`} onClick={() => openChat(user_id)}>
             <div className="contact-image" style={{ backgroundColor: bgColor }}>
                 {profile_img ?
                     <img src={profile_img} alt="" />

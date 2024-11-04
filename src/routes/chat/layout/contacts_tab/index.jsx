@@ -14,20 +14,19 @@ import { BouncingDots } from '../../../../custom/loading_animations';
 import { socket } from '../../../../socket';
 
 ContactsTab.propTypes = {
-    show: PropTypes.bool
+    show: PropTypes.bool,
+    openChat: PropTypes.func,
+    selectedContactId: PropTypes.string
 }
-export default function ContactsTab({ show }) {
+export default function ContactsTab({ show, openChat, selectedContactId }) {
 
     // const [isDataLoaded, setIsDataLoaded] = useState(false);
     const [loading, setLoading] = useState(true);
 
     // getting data from context
     const customDialogs = useCustomDialog()
-    const { currentUser, setCurrentUser } = useContext(GlobalStateContext);
+    const { currentUser, setCurrentUser, contactsList, setContactsList } = useContext(GlobalStateContext);
     const { chat_contacts } = currentUser
-
-    /* ****** holds contacts list data from the backend ****** */
-    const [contactsList, setContactsList] = useState(null);
 
     // for debugging
     useEffect(() => {
@@ -150,15 +149,17 @@ export default function ContactsTab({ show }) {
             // payload : { "uuid of the contact": { chat_id: "uuid of the chat" } }
             const payload = {}
             for (const [key, value] of Object.entries(chat_contacts)) {
+                if (value.blocked) continue
                 payload[key] = { chat_id: value.chat_id }
             }
 
             let contacts_fetch_resp = await fetchData('getContactsDetail',
                 { token: getToken(), contactsList: payload })
 
-            // adding time at which the contact was added in the list
+            // adding chat_id and time at which the contact was added
             contacts_fetch_resp = contacts_fetch_resp.map(contact => {
                 contact.contact_added_at = chat_contacts[contact.user_id].time
+                contact.chat_id = chat_contacts[contact.user_id].chat_id
                 return contact
             })
 
@@ -270,7 +271,7 @@ export default function ContactsTab({ show }) {
                     }
                 </div>}
                 <div className="contacts-list">
-                    {contactsList && sortContactsList(contactsList).map((contact) => <ContactBox key={contact.user_id} {...contact} />)}
+                    {contactsList && sortContactsList(contactsList).map((contact) => <ContactBox key={contact.user_id} {...contact} openChat={openChat} isSelected={selectedContactId == contact.user_id} />)}
                 </div>
                 <div className="search-result">
 

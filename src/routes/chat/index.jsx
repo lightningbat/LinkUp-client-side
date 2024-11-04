@@ -1,11 +1,13 @@
 import './style.scss';
 
-import { Menu, ContactsTab, GroupsTab, SettingsTab } from './layout'
+import { Menu, ContactsTab, GroupsTab, SettingsTab, UserChat } from './layout'
 import { getToken } from '../../services/authenticationService'
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { socket } from '../../socket';
 
 export default function Chat() {
+
+    // socket connection
     useEffect(() => {
         socket.auth.token = getToken();
         socket.connect();
@@ -21,25 +23,24 @@ export default function Chat() {
             socket.disconnect();
         }
     }, []);
-    
-    const [displayChat, setDisplayChat] = useState(false);
+
     const [selectedTab, setSelectedTab] = useState("contacts"); // "contacts" : chat tab, "groups" : group tab, "settings" : settings tab
+    // to open/close chat
+    // null : hidden
+    // true : opens with slide animation
+    // false : closes with slide animation
+    const [displayChat, setDisplayChat] = useState(null);
+    // id of the contact to open
+    const [selectedContactId, setSelectedContactId] = useState(null);
 
-    const chat_page_ref = useRef(null);
-    // eslint-disable-next-line no-unused-vars
-    function toggleChat() {
-        setDisplayChat(!displayChat);
+    const openChat = (contact_id) => {
+        // if the same chat is already open
+        if (displayChat && selectedContactId == contact_id) return;
 
-        if (displayChat) {
-            chat_page_ref.current.classList.remove('show')
-            chat_page_ref.current.classList.add('hide')
-
-        } else {
-            chat_page_ref.current.classList.remove('hide')
-            chat_page_ref.current.classList.add('show')
-        }
-
+        setSelectedContactId(contact_id);
+        setDisplayChat(true);
     }
+    const closeChat = () => {setDisplayChat(false); setSelectedContactId(null);}
 
 
     return (
@@ -49,16 +50,18 @@ export default function Chat() {
                 selectedTab={selectedTab}
                 setSelectedTab={setSelectedTab}
             />
-            
+
             {/* chat tabs and other tabs */}
             <div className="tab-content">
-                <ContactsTab show={selectedTab === "contacts"} />
+                <ContactsTab show={selectedTab === "contacts"} openChat={openChat} selectedContactId={selectedContactId} />
                 <GroupsTab show={selectedTab === "groups"} />
                 <SettingsTab show={selectedTab === "settings"} />
             </div>
 
             {/* chat content */}
-            <div className='chat-content' ref={chat_page_ref}></div>
+            {displayChat != null && <UserChat show={displayChat} closeChat={closeChat} contact_id={selectedContactId} />}
+            {displayChat == null && <div className="no-selected-chat" />
+            }
         </div>
     )
 }
