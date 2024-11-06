@@ -19,6 +19,19 @@ ContactsTab.propTypes = {
     selectedContactId: PropTypes.string
 }
 export default function ContactsTab({ show, openChat, selectedContactId }) {
+    // add "more-width" class name to the list container when the mouse hovers over it
+    // this makes the scrollbar more wider
+    useEffect(() => {
+        element.current.addEventListener("mousemove", function (e) {
+            const distanceX = element.current.offsetLeft + element.current.offsetWidth - e.pageX;
+            if ((element.current.offsetTop < e.pageY && e.pageY < element.current.offsetTop + element.current.offsetHeight) && (distanceX < 15 && distanceX > 0)) {
+                element.current.classList.add('more-width')
+            }
+            else {
+                element.current.classList.remove('more-width')
+            }
+        })
+    }, [])
 
     // const [isDataLoaded, setIsDataLoaded] = useState(false);
     const [loading, setLoading] = useState(true);
@@ -99,9 +112,7 @@ export default function ContactsTab({ show, openChat, selectedContactId }) {
     }
 
     function syncNewContact(contact_details) {
-        add_new_contact(contact_details, true)
-        // joining the contact's socket room
-        socket.emit("join_new_contact_room", contact_details.user_id)
+        add_new_contact(contact_details)
     }
 
     function updateContactProfile(contact_details) { // contact_details : { user_id, display_name, username }
@@ -158,7 +169,7 @@ export default function ContactsTab({ show, openChat, selectedContactId }) {
 
             // adding chat_id and time at which the contact was added
             contacts_fetch_resp = contacts_fetch_resp.map(contact => {
-                contact.contact_added_at = chat_contacts[contact.user_id].time
+                contact.contact_added_at = chat_contacts[contact.user_id].timestamp
                 contact.chat_id = chat_contacts[contact.user_id].chat_id
                 return contact
             })
@@ -207,40 +218,35 @@ export default function ContactsTab({ show, openChat, selectedContactId }) {
         })
     }
 
-    const add_new_contact = (contact_details, called_by_socket = false) => {
+    const add_new_contact = (contact_details) => {
+        console.log("contact_details: ", contact_details)
         // called_by_socket : if the function is called by the socket (to sync with other tabs)
         // this means any other socket added this contact
         if (contactsList && contactsList.find(contact => contact.user_id == contact_details.user_id)) {
             // new contact is already in the list
             return
         }
+        // renaming the timestamp to contact_added_at
+        contact_details.contact_added_at = contact_details.timestamp
+        delete contact_details.timestamp
+        // adding extra fields that are not present in the backend response
+        contact_details.chat_id = null
+        contact_details.last_message_info = null
+        
         let new_sorted_contacts;
-        if (contactsList) {
+        if (contactsList) { // if contactsList is not null
+            // sorting contactsList
             new_sorted_contacts = sortContactsList([...contactsList, contact_details])
         }
-        else {
+        else { // if contactsList is null
             new_sorted_contacts = [contact_details]
         }
         setContactsList(new_sorted_contacts)
 
         // informing websocket that a new contact has been added
         // so it can add the current user to the contact's socket room
-        if (!called_by_socket) socket.emit("join_new_contact_room", contact_details.user_id)
+        socket.emit("join_new_contact_room", contact_details.user_id)
     }
-
-    // add "more-width" class name to the list container when the mouse hovers over it
-    // this makes the scrollbar more wider
-    useEffect(() => {
-        element.current.addEventListener("mousemove", function (e) {
-            const distanceX = element.current.offsetLeft + element.current.offsetWidth - e.pageX;
-            if ((element.current.offsetTop < e.pageY && e.pageY < element.current.offsetTop + element.current.offsetHeight) && (distanceX < 15 && distanceX > 0)) {
-                element.current.classList.add('more-width')
-            }
-            else {
-                element.current.classList.remove('more-width')
-            }
-        })
-    }, [])
 
     return (
         <div className="contacts-tab" style={{ display: show ? "flex" : "none" }}>

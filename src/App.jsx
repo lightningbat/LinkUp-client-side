@@ -9,7 +9,7 @@ import fetchService from './services/fetchService'
 import { GlobalStateContext } from './context';
 import { GrowingShrinkingSquare } from './custom/loading_animations';
 import useCustomDialog from './custom/dialogs';
-
+import { useImmer } from 'use-immer';
 import { socket } from './socket';
 
 export default function App() {
@@ -19,9 +19,8 @@ export default function App() {
   const [currentRoute, setCurrentRoute] = useState(null) // 'authentication' or 'chat'
   const [currentUser, setCurrentUser] = useState(null)
   const [contactsList, setContactsList] = useState(null)
-  const [contactsChatData, setContactsChatData] = useState({})
-  // to load chat route only when required data is loaded
-  const [isDataLoaded, setIsDataLoaded] = useState(false)
+  const [contactsChatData, updateContactsChatData] = useImmer({})
+  const [isDataLoaded, setIsDataLoaded] = useState(false) // to load chat route only when required data is loaded
   const [darkMode, setDarkMode] = useState(false)
 
   // error state for fetching user
@@ -142,7 +141,7 @@ export default function App() {
         value={{
           currentUser, setCurrentUser,
           contactsList, setContactsList,
-          contactsChatData, setContactsChatData,
+          contactsChatData, updateContactsChatData,
           darkMode, setDarkMode
         }}>
 

@@ -6,6 +6,7 @@ import { getToken } from '../../../../services/authenticationService';
 import { Spinner } from '../../../../custom/loading_animations';
 import useCustomDialog from '../../../../custom/dialogs';
 import PropTypes from 'prop-types';
+import { socket } from '../../../../socket';
 
 ContactBoxToBeAdded.propTypes = {
     user_data: PropTypes.shape({
@@ -30,12 +31,13 @@ export default function ContactBoxToBeAdded({ user_data, delCacheElement, addNew
     const customDialogs = useCustomDialog();
     const addContact = async () => {
         setRequestStatus(1);
-        const res = await FetchService('addContact', { token: getToken(), contact_user_id: user_data.user_id });
+        const res = await FetchService('addContact', { token: getToken(), contact_user_id: user_data.user_id, socket_id: socket.id });
         if (res.ok) {
             setRequestStatus(2);
             delCacheElement(user_data.user_id);
             const { timestamp, online, last_seen } = res.responseData;
-            addNewContact({...user_data, "contact_added_at": timestamp, "online": online, "last_seen": last_seen, "last_message_info": null});
+            const new_contact_data  = {...user_data, timestamp, online, last_seen, "last_message_info": null};
+            addNewContact(new_contact_data);
         } else {
             setRequestStatus(0);
             let message = res.responseType == 'json' ? res.responseData.message : res.responseData;
