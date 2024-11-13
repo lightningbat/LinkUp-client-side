@@ -23,6 +23,13 @@ export default function App() {
   const [isDataLoaded, setIsDataLoaded] = useState(false) // to load chat route only when required data is loaded
   const [darkMode, setDarkMode] = useState(false)
 
+  useEffect(() => {
+    console.log('contactsChatData', contactsChatData)
+  }, [contactsChatData])
+  useEffect(() => {
+    console.log('contactsList', contactsList)
+}, [contactsList])
+
   // error state for fetching user
   const [errorFetchingUser, setErrorFetchingUser] = useState(false)
 

@@ -5,14 +5,15 @@ import { GlobalStateContext } from "../../../../context";
 import { MsgInputSection } from "../../../../components/chat_page_comp";
 import ChatList from "./chat_list";
 import dateFormatter from "./dateFormatter";
-import { socket } from "../../../../socket";
+// import { socket } from "../../../../socket";
 
 UserChat.propTypes = {
     show: PropTypes.bool,
     closeChat: PropTypes.func,
-    contact_id: PropTypes.string
+    contact_id: PropTypes.string,
+    sendMsg: PropTypes.func
 }
-export default function UserChat({ show, closeChat, contact_id }) {
+export default function UserChat({ show, closeChat, contact_id, sendMsg }) {
     const { contactsList } = useContext(GlobalStateContext);
     
     // contact info of the selected contact
@@ -25,19 +26,6 @@ export default function UserChat({ show, closeChat, contact_id }) {
             }
         })
     }, [contactsList, contact_id]);
-
-    /**
-     * @param {number} msg_type - 1 for text, 2 for image
-     * @param {string} msg - message
-     */
-    function sendMsg(msg_type, msg) {
-        if (msg_type != 1) return;
-
-        socket.timeout(5000).emit("send_msg", { contact_id, msg_type, msg }, (err, res) => {
-            if (err) console.log(err);
-            else console.log(res);
-        });
-    }
 
     return (
         <div className={`user-chat ${show ? "show" : "hide"}`}>
@@ -72,8 +60,8 @@ export default function UserChat({ show, closeChat, contact_id }) {
                     </div>
                 }
             </div>
-            <ChatList />
-            <MsgInputSection key={contact_id} sendMsg={sendMsg} />
+            <ChatList key={`chat-list-${contact_id}`} selectedContactId={contact_id} />
+            <MsgInputSection key={`msg-input-${contact_id}`} sendMsg={sendMsg} />
         </div>
     )
 }

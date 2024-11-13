@@ -17,6 +17,7 @@
     --contact_box-hover-bg-color: #E6EBF5;
     --contact-box-border-color: #0000001f;
     --contact_box-selected-bg-color: #E6EBF5;
+    --contact_box-message-sender-color: #979797;
     --settings-tab-profile-edit-btn-bg-color: #E6EBF5;
     --settings-tab-options-bg-color: #E6EBF5;
     --settings-tab-logout-btn-bg-color: #ffbbbb;
@@ -44,6 +45,7 @@ body[data-theme="dark-theme"] {
     --contact_box-hover-bg-color: #36404A;
     --contact-box-border-color: #ffffff21;
     --contact_box-selected-bg-color: #36404A;
+    --contact_box-message-sender-color: #a7a7a7;
     --settings-tab-profile-edit-btn-bg-color: #36404A; /* profile image edit btn */
     --settings-tab-options-bg-color: #36404A;
     --settings-tab-logout-btn-bg-color: #ff9b9b;

@@ -41,12 +41,6 @@ export default function ContactsTab({ show, openChat, selectedContactId }) {
     const { currentUser, setCurrentUser, contactsList, setContactsList } = useContext(GlobalStateContext);
     const { chat_contacts } = currentUser
 
-    // for debugging
-    useEffect(() => {
-        console.log('contactsList', contactsList)
-    }, [contactsList])
-
-
     // reference to the list container
     const element = useRef(null)
     const user_search_box_ref = useRef();
@@ -219,9 +213,6 @@ export default function ContactsTab({ show, openChat, selectedContactId }) {
     }
 
     const add_new_contact = (contact_details) => {
-        console.log("contact_details: ", contact_details)
-        // called_by_socket : if the function is called by the socket (to sync with other tabs)
-        // this means any other socket added this contact
         if (contactsList && contactsList.find(contact => contact.user_id == contact_details.user_id)) {
             // new contact is already in the list
             return
@@ -230,7 +221,7 @@ export default function ContactsTab({ show, openChat, selectedContactId }) {
         contact_details.contact_added_at = contact_details.timestamp
         delete contact_details.timestamp
         // adding extra fields that are not present in the backend response
-        contact_details.chat_id = null
+        if (!contact_details?.chat_id) contact_details.chat_id = null
         contact_details.last_message_info = null
         
         let new_sorted_contacts;
@@ -277,7 +268,9 @@ export default function ContactsTab({ show, openChat, selectedContactId }) {
                     }
                 </div>}
                 <div className="contacts-list">
-                    {contactsList && sortContactsList(contactsList).map((contact) => <ContactBox key={contact.user_id} {...contact} openChat={openChat} isSelected={selectedContactId == contact.user_id} />)}
+                    {contactsList && sortContactsList(contactsList).map((contact) => 
+                        <ContactBox key={contact.user_id} {...contact} openChat={openChat} isSelected={selectedContactId == contact.user_id} />
+                    )}
                 </div>
                 <div className="search-result">
 
