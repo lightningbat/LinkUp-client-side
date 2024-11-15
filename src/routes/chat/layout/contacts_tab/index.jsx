@@ -38,7 +38,7 @@ export default function ContactsTab({ show, openChat, selectedContactId }) {
 
     // getting data from context
     const customDialogs = useCustomDialog()
-    const { currentUser, setCurrentUser, contactsList, setContactsList } = useContext(GlobalStateContext);
+    const { currentUser, setCurrentUser, contactsList, setContactsList, sortContactsList } = useContext(GlobalStateContext);
     const { chat_contacts } = currentUser
 
     // reference to the list container
@@ -71,23 +71,24 @@ export default function ContactsTab({ show, openChat, selectedContactId }) {
     /* ****** Socket Event Sub-Handler ****** */
     // update the online status of the contact based on the
     // data fetched from the backend after reconnect to socket
-    async function recoverContactsOnlineStatus() {
+    async function getContactsOnlineStatus() {
         if (contactsList) {
             const all_contacts_ids = contactsList.map(contact => contact.user_id)
             const response = await FetchService('getContactsOnlineStatus', 
                 { token: getToken(), contacts: all_contacts_ids })
             
             if (response.ok) {
-                // data : { "uuid of the contact": { "online": boolean, "last_seen": "timestamp"} }
+                // data : { "uuid of the contact": { "online": boolean, "last_seen": "timestamp"}, ...}
                 const data = response.responseData;
-                let updated_contacts = contactsList.map(contact => {
-                    if (data[contact.user_id]) {
-                        contact.online = data[contact.user_id].online
-                        contact.last_seen = data[contact.user_id].last_seen
-                    }
-                    return contact
-                })
-                setContactsList(updated_contacts)
+                setContactsList((prevContactsList) =>
+                    prevContactsList.map((contact) => {
+                        if (data[contact.user_id]) {
+                            contact.online = data[contact.user_id].online
+                            contact.last_seen = data[contact.user_id].last_seen
+                        }
+                        return contact;
+                    })
+                )
             }
             else {
                 customDialogs({
@@ -97,12 +98,21 @@ export default function ContactsTab({ show, openChat, selectedContactId }) {
             }
         }
     }
+    // getting the online status of the contacts when getContactsInfo is fetched and
+    // contactsList is populated
+    const timesRef = useRef(0); // to prevent fetching on every change in contactsList
+    useEffect(() => {
+        if (contactsList && timesRef.current === 0) {
+            timesRef.current++;
+            getContactsOnlineStatus();
+        }
+    }, [contactsList]);
 
     /* ****** Socket Event Handlers ****** */
     // runs when the socket reconnects
     function recoverDataOnReconnect() {
         // updating online status of all users in contactList
-        recoverContactsOnlineStatus()
+        getContactsOnlineStatus()
     }
 
     function syncNewContact(contact_details) {
@@ -122,7 +132,11 @@ export default function ContactsTab({ show, openChat, selectedContactId }) {
         setContactsList(updated_contacts)
     }
 
-    function  updateProfileSync(data) {
+/**
+ * Updates the current user's profile with the provided data.
+ * @param {Object} data - An object containing the profile fields to be updated.
+ */
+    function  syncProfileUpdate(data) {
         setCurrentUser({...currentUser, ...data})
     }
     useEffect(() => {
@@ -131,7 +145,7 @@ export default function ContactsTab({ show, openChat, selectedContactId }) {
         socket.on("connect", recoverDataOnReconnect)
         socket.on("newContact", syncNewContact)
         socket.on("contact_profile_update", updateContactProfile)
-        socket.on("profile_update_sync", updateProfileSync)
+        socket.on("profile_update_sync", syncProfileUpdate)
 
         return () => {
             socket.off("user_connected", updateOnlineStatus)
@@ -139,12 +153,13 @@ export default function ContactsTab({ show, openChat, selectedContactId }) {
             socket.off("connect", recoverDataOnReconnect)
             socket.off("newContact", syncNewContact)
             socket.off("contact_profile_update", updateContactProfile)
-            socket.off("profile_update_sync", updateProfileSync)
+            socket.off("profile_update_sync", syncProfileUpdate)
         }
     })
 
     // receiving contacts and chat data from the backend on Startup
     useEffect(() => {
+        // if there are no contacts
         if (!chat_contacts || Object.keys(chat_contacts).length == 0) {
             setLoading(false);
             return
@@ -193,23 +208,6 @@ export default function ContactsTab({ show, openChat, selectedContactId }) {
             })
         }
         return null
-    }
-
-    // sorts the contacts list based on the last message time
-    function sortContactsList(contacts_list) {
-        return contacts_list.sort((a, b) => {
-            // sorting based on last message time( if available )
-            // ( if not available ) sorting based on contact added time
-            const dateA = new Date(a?.last_message_info?.time)?.getTime() || new Date(a?.contact_added_at)?.getTime()
-            const dateB = new Date(b?.last_message_info?.time)?.getTime() || new Date(b?.contact_added_at)?.getTime()
-            if (dateA > dateB) {
-                return -1
-            }
-            if (dateA < dateB) {
-                return 1
-            }
-            return 0
-        })
     }
 
     const add_new_contact = (contact_details) => {
@@ -268,7 +266,7 @@ export default function ContactsTab({ show, openChat, selectedContactId }) {
                     }
                 </div>}
                 <div className="contacts-list">
-                    {contactsList && sortContactsList(contactsList).map((contact) => 
+                    {contactsList && contactsList.map((contact) => 
                         <ContactBox key={contact.user_id} {...contact} openChat={openChat} isSelected={selectedContactId == contact.user_id} />
                     )}
                 </div>

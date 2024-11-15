@@ -22,13 +22,36 @@ export default function App() {
   const [contactsChatData, updateContactsChatData] = useImmer({})
   const [isDataLoaded, setIsDataLoaded] = useState(false) // to load chat route only when required data is loaded
   const [darkMode, setDarkMode] = useState(false)
+  const [contactsListSortType, setContactsListSortType] = useState('last_message_time')
 
   useEffect(() => {
     console.log('contactsChatData', contactsChatData)
   }, [contactsChatData])
   useEffect(() => {
     console.log('contactsList', contactsList)
-}, [contactsList])
+  }, [contactsList, contactsListSortType])
+
+  /**
+   * @description sorts contacts list based on last message time( if available ) or contact added time
+   * @param {Array<Object>} contacts_list - array of objects containing contact details
+   * @returns {Array} sorted list of contacts
+   */
+  function sortContactsList(contacts_list) {
+    if (!contacts_list || contacts_list.length < 2) return contacts_list
+    return contacts_list.sort((a, b) => {
+      // sorting based on last message time( if available )
+      // ( if not available ) sorting based on contact added time
+      const dateA = new Date(a?.last_message_info?.timestamp)?.getTime() || new Date(a?.contact_added_at)?.getTime()
+      const dateB = new Date(b?.last_message_info?.timestamp)?.getTime() || new Date(b?.contact_added_at)?.getTime()
+      if (dateA > dateB) {
+        return -1
+      }
+      if (dateA < dateB) {
+        return 1
+      }
+      return 0
+    })
+  }
 
   // error state for fetching user
   const [errorFetchingUser, setErrorFetchingUser] = useState(false)
@@ -149,7 +172,9 @@ export default function App() {
           currentUser, setCurrentUser,
           contactsList, setContactsList,
           contactsChatData, updateContactsChatData,
-          darkMode, setDarkMode
+          darkMode, setDarkMode,
+          sortContactsList,
+          contactsListSortType, setContactsListSortType
         }}>
 
         {currentRoute == 'chat' && isDataLoaded && <Chat />}

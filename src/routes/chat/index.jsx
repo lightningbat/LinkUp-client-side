@@ -8,7 +8,7 @@ import { GlobalStateContext } from '../../context';
 
 export default function Chat() {
 
-    const { contactsList, setContactsList, updateContactsChatData } = useContext(GlobalStateContext);
+    const { contactsList, setContactsList, updateContactsChatData, sortContactsList } = useContext(GlobalStateContext);
 
     // socket connection
     useEffect(() => {
@@ -35,9 +35,9 @@ export default function Chat() {
     const [displayChat, setDisplayChat] = useState(null);
     
     /*
-    There was some error causing the selectedContactId to be null
-    1. when matching with sender_id on receiving new message
-    2. when updating unread_count in addNewMessage
+    There was some error causing the selectedContactId to be null when:-
+    1. matching with sender_id on receiving new message
+    2. updating unread_count in addNewMessage
 
     The solution was to store the selectedContactId in a useRef hook and updates its value in useEffect */
     const [selectedContactId, setSelectedContactId] = useState(null); // uuid of the selected contact(open chat)
@@ -88,17 +88,18 @@ export default function Chat() {
      * @param {string} contact_id - id of the contact to match
      */
     const createNewChat = (chat_id, msg_type, msg_id, msg, timestamp, sender, contact_id) => {
-        setContactsList((prevContactsList) => 
-            prevContactsList.map(contact => 
+        // updating *chat_id*, unread_count and last_message_info in contactsList
+        setContactsList((prevContactsList) =>
+            sortContactsList(prevContactsList.map(contact => 
                 contact.user_id === contact_id 
-                    ? { 
+                    ? {
                         ...contact, 
                         chat_id, 
                         unread_count: 0, 
                         last_message_info: { sender, msg_type, msg_id, msg, timestamp }
                     }
                     : contact
-            )
+            ))
         );
 
         // crating empty array in contactsChatData
@@ -134,7 +135,7 @@ export default function Chat() {
         
         // updating last_message_info and unread_count in contactsList
         setContactsList((prevContactsList) => 
-            prevContactsList.map(contact => 
+            sortContactsList(prevContactsList.map(contact => 
                 contact.user_id === contact_id 
                     ? {
                         ...contact,
@@ -143,7 +144,7 @@ export default function Chat() {
                         unread_count: (selected_contact_id.current != contact_id) && sender == 2 ? contact.unread_count + 1 : contact.unread_count // updating unread count if sender is other user and contact is not currently open
                     }
                     : contact
-            )
+            ))
         );
     }
 

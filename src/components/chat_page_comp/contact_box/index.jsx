@@ -8,7 +8,7 @@ ContactBox.propTypes = {
     profile_img: PropTypes.string,
     bgColor: PropTypes.string.isRequired,
     display_name: PropTypes.string.isRequired,
-    online: PropTypes.bool.isRequired,
+    online: PropTypes.bool,
     unread_count: PropTypes.number,
     last_message_info: PropTypes.shape({
         msg: PropTypes.string,
@@ -70,7 +70,7 @@ export default function ContactBox({ isSelected, openChat, user_id, profile_img,
             <div className="contact-info">
                 <h5 className="contact-name">{display_name}</h5>
                 {toShowLastMessageInfo &&
-                    <dib className="message-details">
+                    <div className="message-details">
                         {last_message_info?.sender === 1 && <span className="sender">You:</span>}
                         <p className='message'>
                             {last_message_info?.msg_type === 1 ?
@@ -85,7 +85,7 @@ export default function ContactBox({ isSelected, openChat, user_id, profile_img,
                                 </span>
                             }
                         </p>
-                    </dib>
+                    </div>
                 }
             </div>
             {toShowLastMessageInfo && <div className='container'>
